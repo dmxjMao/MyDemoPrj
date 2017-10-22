@@ -1,0 +1,10 @@
+// MFCDictComp.idl : type library source for MFCDictComp.dll
+// This file will be processed by the MIDL compiler to produce the
+// type library (MFCDictComp.tlb).
+
+[ uuid(7CB8B611-3E5A-43B1-8076-24E3EE6130B7), version(1.0) ]
+library MFCDictComp
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+};

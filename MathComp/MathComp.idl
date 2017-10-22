@@ -1,0 +1,10 @@
+// MathComp.idl : type library source for MathComp.dll
+// This file will be processed by the MIDL compiler to produce the
+// type library (MathComp.tlb).
+
+[ uuid(B23EB457-EAFC-4750-936D-FB95EF37111E), version(1.0) ]
+library MathComp
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+};
