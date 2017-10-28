@@ -1,0 +1,28 @@
+// PointComp.idl : type library source for PointComp.dll
+// This file will be processed by the MIDL compiler to produce the
+// type library (PointComp.tlb).
+
+#include "olectl.h"
+[ uuid(1A270F1E-9E74-4BFC-8EB8-B80D8D901133), version(1.0) ]
+library PointComp //组件，可以有很多组件对象
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	//  Primary dispatch interface for PointObj
+		
+	[ uuid(1716B8DF-6E8B-4567-A0C5-50FA64C6E8D2) ]
+	dispinterface IPointObj //接口
+	{
+		properties:
+		methods:
+	};
+
+	//  Class information for PointObj
+
+	[ uuid(B9143056-208E-4DD9-8E76-7A7F0B9A5B1D) ]
+	coclass PointObj //组件对象，可以有很多接口
+	{
+		[default] dispinterface IPointObj;
+	};
+};

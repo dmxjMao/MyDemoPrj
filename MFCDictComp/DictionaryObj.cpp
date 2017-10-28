@@ -26,6 +26,7 @@ IMPLEMENT_OLECREATE(CDictionaryObj, "Dictionary.Object" ,
 
 CDictionaryObj::CDictionaryObj()
 {
+	
 }
 
 CDictionaryObj::~CDictionaryObj()

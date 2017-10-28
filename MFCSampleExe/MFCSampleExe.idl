@@ -1,0 +1,13 @@
+// MFCSampleExe.idl : type library source for MFCSampleExe.exe
+
+// This file will be processed by the MIDL compiler to produce the
+// type library (MFCSampleExe.tlb).
+
+[ uuid(C0DA5781-80E5-4FF7-9771-1E248B50C410), version(1.0) ]
+library MFCSampleExe
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+
+};
