@@ -1,0 +1,12 @@
+新建对话框工程，导入excel类型库，本地安装的是office14-》office 2010，生成一批头文件，
+编译报一堆excel.tlh相关的错，把生成的.h里的#import注释了，因为它是生成.tlh的，c++程序能理解odl/tlb的内容，不需要tlh；
+
+再编译，有一个错：VARIANT DialogBox(); 改为：VARIANT _DialogBox();
+
+InitInstance
+	if (!AfxOleInit()) {
+		AfxMessageBox(_T("Cannot initialize COM dll"));
+		return FALSE;
+	}
+	AfxEnableControlContainer();
+
