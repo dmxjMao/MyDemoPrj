@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c74379b7-e7d5-4f97-b4c1-02cdd4f0bbb4}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{62f69baa-b49b-41f4-b40b-d7d808158940}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{f63e0692-199d-4ee4-81b8-d40872329d63}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SkinHeaderCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinHorizontalScrollbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinListCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinListDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinVerticleScrollbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SkinList.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinHeaderCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinHorizontalScrollbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinListCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinListDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinVerticleScrollbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\ColumnHeaderEnd.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ColumnHeaderSpan.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ColumnHeaderStart.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\HorizontalScrollBarLeftArrow.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\HorizontalScrollBarRightArrow.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\HorizontalScrollBarSpan.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\HorizontalScrollBarThumb.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\HorizontalScrollBarThumb2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ListCtrl_Tile.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ScrollBarArrowDown.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ScrollBarArrowUp.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ScrollBarSpan.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ScrollBarThumb.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\ScrollBarTop.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\SkinList.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VerticleScrollbarBottom.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VerticleScrollBarDownArrow.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VerticleScrollBarSpan.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VerticleScrollBarThumb.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VerticleScrollbarTop.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VerticleScrollBarUpArrow.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\SkinList.rc2">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
