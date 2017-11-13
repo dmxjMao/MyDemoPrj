@@ -9,6 +9,8 @@
 
 
 #include "CApplication.h"
+#include "CWindows.h"
+#include "CWindow0.h"
 #include "CFont0.h"
 #include "CRange.h"
 #include "CWorkbook.h"
@@ -18,12 +20,13 @@
 #include "CChart.h"
 #include "CCharts.h"
 
-//#include "mschart2.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+
+CApplication app;
 
 // CAboutDlg dialog used for App About
 
@@ -43,6 +46,8 @@ public:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+//	afx_msg void OnClose();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -55,6 +60,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+//	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -72,7 +78,7 @@ CAutomateExcelDlg::CAutomateExcelDlg(CWnd* pParent /*=NULL*/)
 void CAutomateExcelDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MSCHART2, m_demoChart);
+	//DDX_Control(pDX, IDC_MSCHART2, m_demoChart);
 }
 
 BEGIN_MESSAGE_MAP(CAutomateExcelDlg, CDialogEx)
@@ -80,6 +86,7 @@ BEGIN_MESSAGE_MAP(CAutomateExcelDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDRun, &CAutomateExcelDlg::OnBnClickedRun)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -118,7 +125,7 @@ BOOL CAutomateExcelDlg::OnInitDialog()
 
 	CRect rc;
 	GetClientRect(&rc);
-	m_demoChart.SetWindowPos(0, rc.left + 1, rc.top + 1, rc.Width() - 2, rc.Height() - 15, SWP_NOZORDER | SWP_NOACTIVATE);
+	//m_demoChart.SetWindowPos(0, rc.left + 1, rc.top + 1, rc.Width() - 2, rc.Height() - 15, SWP_NOZORDER | SWP_NOACTIVATE);
 
 	
 
@@ -203,7 +210,7 @@ void CAutomateExcelDlg::OnBnClickedRun()
 		covFalse((short)FALSE),
 		covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
 
-	CApplication app;
+	//CApplication app;
 
 	// Start Excel and get an Application object.
 	if (!app.CreateDispatch(TEXT("Excel.Application")))
@@ -212,21 +219,64 @@ void CAutomateExcelDlg::OnBnClickedRun()
 		return;
 	}
 
+	//设置excel窗口样式
+	HWND hWnd = (HWND)app.get_Hwnd();
+	LONG nStyle = ::GetWindowLongPtr(hWnd, GWL_STYLE);
+	nStyle &= ~(WS_BORDER | WS_OVERLAPPEDWINDOW | WS_HSCROLL | WS_SIZEBOX);
+	::SetWindowLongPtr(hWnd, GWL_STYLE, nStyle);
+
+	//设置excel程序的位置
+	CRect rc;
+	GetClientRect(&rc);
+	ClientToScreen(&rc);
+
+	//如果excel全屏显示了，就不能设置Left，或者Left值无效都会报错
+	app.put_DisplayFullScreen(FALSE);
+	app.put_Left(rc.left * 3 / 4);
+	app.put_Top(rc.top * 3 / 4);
+	app.put_Width(rc.Width() * 3 / 4);
+	app.put_Height(rc.Height() * 3 / 4 - 30);
+
+	app.put_DisplayScrollBars(FALSE);
+	app.put_DisplayStatusBar(FALSE);
+	app.put_DisplayAlerts(FALSE); //关闭程序不提示“保存”
+
+	//app.put_CalculateBeforeSave(FALSE);
+
 	CWorkbooks books;
 	CWorkbook book;
 	CWorksheets sheets;
 	CWorksheet sheet;
-	CRange range;
-	CFont0 font;
 
 	books = app.get_Workbooks();
-	book = books.Add(covOptional);
-
+	book = books.Add(covOptional); //新建一个workbook
 
 	//Get the first sheet.
-	sheets = book.get_Sheets();
+	sheets = book.get_Worksheets(); //获取worksheets
 	sheet = sheets.get_Item(COleVariant((short)1));
+	
+	//long nCnt = sheets.get_Count();
+	//for (long i = 2; i <= nCnt; ++i) {
+	//	CWorksheet tmpSheet = sheets.get_Item(COleVariant((short)i));
+	//	tmpSheet.put_Visible(FALSE);
+	//}
 
+	CWindows wnds; //一个worksheet算一个窗口
+	wnds = app.get_Windows();
+	//long nCnt = wnds.get_Count();
+	//long nCreator = wnds.get_Creator();
+
+	CWindow0 wnd;
+	wnd = wnds.get_Item(COleVariant((short)1));
+	
+	wnd.put_DisplayFormulas(FALSE);
+	wnd.put_DisplayGridlines(FALSE);
+	wnd.put_DisplayHeadings(FALSE);
+
+	//nCnt = 0;
+
+	CRange range;
+	CFont0 font;
 	range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("A1")));
 	range.put_Value2(COleVariant(TEXT("Average precipation (mm)")));
 	range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("C1")));
@@ -283,11 +333,103 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	cols.AutoFit();
 
 	//Adding Chart
-	CCharts charts;
-	CChart chart;
-	charts = book.get_Charts();
-	chart = charts.Add(covOptional, covOptional, covOptional);
+	//CCharts charts;
+	//CChart chart;
+	//charts = book.get_Charts();
+	//chart = charts.Add(covOptional, covOptional, covOptional);
 
 	app.put_Visible(TRUE);
 	app.put_UserControl(TRUE);
+}
+
+
+
+
+//void CAutomateExcelDlg::InitChart()
+//{
+//	// 设置标题
+//	m_demoChart.put_TitleText(_T("mschart 示例 by thinkry@263.net"));
+//	
+//	// 背景色
+//	m_demoChart.get_Backdrop()->GetFill().SetStyle(1);
+//	
+//	m_demoChart.GetBackdrop().GetFill().GetBrush().GetFillColor().Set(255, 255, 255);
+//	
+//	// 显示图例
+//	m_demoChart.SetShowLegend(TRUE);
+//	
+//	m_demoChart.SetColumn(1);
+//	
+//	m_demoChart.SetColumnLabel((LPCTSTR)"1号机");
+//	
+//	m_demoChart.SetColumn(2);
+//	
+//	m_demoChart.SetColumnLabel((LPCTSTR)"2号机");
+//	
+//	m_demoChart.SetColumn(3);
+//	
+//	m_demoChart.SetColumnLabel((LPCTSTR)"3号机");
+//	
+//	// 栈模式
+//	// m_demoChart.SetStacking(TRUE);
+//	// Y轴设置
+//	VARIANT var;
+//	
+//	m_demoChart.GetPlot().GetAxis(1, var).GetValueScale().SetAuto(FALSE); // 不自动标注Y 轴刻度
+//	
+//	m_demoChart.GetPlot().GetAxis(1, var).GetValueScale().SetMaximum(100); // Y轴最大刻度
+//	
+//	m_demoChart.GetPlot().GetAxis(1, var).GetValueScale().SetMinimum(0); // Y轴最小刻度
+//	
+//	m_demoChart.GetPlot().GetAxis(1, var).GetValueScale().SetMajorDivision(5); // Y轴刻   度5等分
+//	
+//	m_demoChart.GetPlot().GetAxis(1, var).GetValueScale().SetMinorDivision(1); // 每刻度   一个刻度线
+//	
+//	m_demoChart.GetPlot().GetAxis(1, var).GetAxisTitle().SetText("小时"); // Y轴名称
+//	
+//	// 3条曲线
+//	m_demoChart.SetColumnCount(3);
+//	
+//	// 线色
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(1).GetPen().GetVtColor().Set(0,		0, 255);
+//	
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(2).GetPen().GetVtColor().Set	(255, 0, 0);
+//	
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(3).GetPen().GetVtColor().Set(0,		255, 0);
+//	
+//	// 线宽(对点线图有效)
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(1).GetPen().SetWidth(50);
+//	
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(2).GetPen().SetWidth(100);
+//	
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(3).GetPen().SetWidth(2);
+//	
+//	// 数据点类型显示数据值的模式(对柱柱状图和点线图有效)
+//	// 0: 不显示 1: 显示在柱状图外
+//	// 2: 显示在柱状图内上方 3: 显示在柱状图内中间 4: 显示在柱状图内下方
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(1).GetDataPoints().GetItem  (-1).GetDataPointLabel().SetLocationType(1);
+//	
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(2).GetDataPoints().GetItem  (-1).GetDataPointLabel().SetLocationType(1);
+//	
+//	m_demoChart.GetPlot().GetSeriesCollection().GetItem(3).GetDataPoints().GetItem  (-1).GetDataPointLabel().SetLocationType(1);
+//	
+//}
+
+
+
+void CAutomateExcelDlg::OnClose()
+{
+	//删除所有数据，否则提示“保存”
+	//CWorkbooks books = app.get_Workbooks();
+	//CWorkbook book = books.get_Item(COleVariant((short)1));
+	//CWorksheets sheets = book.get_Worksheets(); //获取worksheets
+	//CWorksheet sheet = sheets.get_Item(COleVariant((short)1));
+	//sheet.Delete();
+
+	//COleVariant filename(_T("excel_demo"));
+	//app.Save(filename);
+
+	app.Quit();
+
+	CDialogEx::OnClose();
 }

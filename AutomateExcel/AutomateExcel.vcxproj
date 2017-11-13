@@ -197,11 +197,12 @@
     <ClInclude Include="CCharts.h" />
     <ClInclude Include="CFont0.h" />
     <ClInclude Include="CRange.h" />
+    <ClInclude Include="CWindow0.h" />
+    <ClInclude Include="CWindows.h" />
     <ClInclude Include="CWorkbook.h" />
     <ClInclude Include="CWorkbooks.h" />
     <ClInclude Include="CWorksheet.h" />
     <ClInclude Include="CWorksheets.h" />
-    <ClInclude Include="mschart2.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -209,7 +210,6 @@
   <ItemGroup>
     <ClCompile Include="AutomateExcel.cpp" />
     <ClCompile Include="AutomateExcelDlg.cpp" />
-    <ClCompile Include="mschart2.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
