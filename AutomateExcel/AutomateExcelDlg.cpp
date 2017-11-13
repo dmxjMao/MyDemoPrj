@@ -211,15 +211,24 @@ void CAutomateExcelDlg::OnBnClickedRun()
 		covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
 
 	//CApplication app;
+	//LPDISPATCH p = app.get_Application();
+	//BOOL bValid = AfxIsValidAddress(p, sizeof(p));
+	//if(0 != p)
+	//	return;
+	//app.ActivateMicrosoftApp(/*xlMicrosoftWord*/5);
+	static int dpi[] = { 100,120,144,192 };
+	int n = GetDeviceCaps(GetDC()->GetSafeHdc(), LOGPIXELSX);
 
-	// Start Excel and get an Application object.
-	if (!app.CreateDispatch(TEXT("Excel.Application")))
-	{
-		AfxMessageBox(TEXT("Couldn't start Excel and get Application object."));
-		return;
+	long nCreator = app.get_Creator();
+	if (0x5843454C != nCreator){ 
+		// Start Excel and get an Application object.
+		if (!app.CreateDispatch(TEXT("Excel.Application"))){
+			AfxMessageBox(TEXT("Couldn't start Excel and get Application object."));
+			return;
+		}
 	}
 
-	//设置excel窗口样式
+	//设置excel窗口样式，笔记本安装了office2016，无效
 	HWND hWnd = (HWND)app.get_Hwnd();
 	LONG nStyle = ::GetWindowLongPtr(hWnd, GWL_STYLE);
 	nStyle &= ~(WS_BORDER | WS_OVERLAPPEDWINDOW | WS_HSCROLL | WS_SIZEBOX);
@@ -231,16 +240,21 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	ClientToScreen(&rc);
 
 	//如果excel全屏显示了，就不能设置Left，或者Left值无效都会报错
+	
 	app.put_DisplayFullScreen(FALSE);
 	app.put_Left(rc.left * 3 / 4);
 	app.put_Top(rc.top * 3 / 4);
 	app.put_Width(rc.Width() * 3 / 4);
 	app.put_Height(rc.Height() * 3 / 4 - 30);
 
+	//app.get_MenuBars()
+	//app.put_AlwaysUseClearType(TRUE);
+	app.put_DisplayFormulaBar(FALSE);
 	app.put_DisplayScrollBars(FALSE);
 	app.put_DisplayStatusBar(FALSE);
 	app.put_DisplayAlerts(FALSE); //关闭程序不提示“保存”
-
+	//app.put_ShowMenuFloaties(FALSE);
+	//app.put_ShowDevTools(FALSE);
 	//app.put_CalculateBeforeSave(FALSE);
 
 	CWorkbooks books;
@@ -269,7 +283,7 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	CWindow0 wnd;
 	wnd = wnds.get_Item(COleVariant((short)1));
 	
-	wnd.put_DisplayFormulas(FALSE);
+	//wnd.put_DisplayFormulas(FALSE);
 	wnd.put_DisplayGridlines(FALSE);
 	wnd.put_DisplayHeadings(FALSE);
 
