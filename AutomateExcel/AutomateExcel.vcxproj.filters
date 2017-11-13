@@ -64,8 +64,11 @@
     <ClInclude Include="CWorksheets.h">
       <Filter>Header Files\excel</Filter>
     </ClInclude>
-    <ClInclude Include="mschart2.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CWindows.h">
+      <Filter>Header Files\excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CWindow0.h">
+      <Filter>Header Files\excel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -76,9 +79,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mschart2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

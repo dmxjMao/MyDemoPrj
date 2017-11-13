@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "mschart2.h"
+//#include "mschart2.h"
 
 
 // CAutomateExcelDlg dialog
@@ -13,14 +13,15 @@ class CAutomateExcelDlg : public CDialogEx
 public:
 	CAutomateExcelDlg(CWnd* pParent = NULL);	// standard constructor
 
+	//void InitChart();
+
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_AUTOMATEEXCEL_DIALOG };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-
 
 // Implementation
 protected:
@@ -34,5 +35,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedRun();
-	CMschart2 m_demoChart;
+	//CMschart2 m_demoChart;
+	afx_msg void OnClose();
 };
