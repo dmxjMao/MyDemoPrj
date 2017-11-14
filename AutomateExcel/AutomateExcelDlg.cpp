@@ -19,6 +19,11 @@
 #include "CWorksheets.h"
 #include "CChart.h"
 #include "CCharts.h"
+#include "CMenuBars.h"
+#include "CMenuBar.h"
+
+#include <map>
+
 
 
 #ifdef _DEBUG
@@ -127,7 +132,8 @@ BOOL CAutomateExcelDlg::OnInitDialog()
 	GetClientRect(&rc);
 	//m_demoChart.SetWindowPos(0, rc.left + 1, rc.top + 1, rc.Width() - 2, rc.Height() - 15, SWP_NOZORDER | SWP_NOACTIVATE);
 
-	
+	ShowWindow(SW_MAXIMIZE);
+	//GetDlgItem(IDRun)->SetWindowPos(0, rc.right / 2, rc.bottom - 30, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -216,12 +222,18 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	//if(0 != p)
 	//	return;
 	//app.ActivateMicrosoftApp(/*xlMicrosoftWord*/5);
-	static int dpi[] = { 100,120,144,192 };
+
+	static std::map<UINT8, float> mapDPI = {
+		{96,1.0f},{ 120,1.25f },{ 144,1.5f },{ 192,2.0f }
+	};
 	int n = GetDeviceCaps(GetDC()->GetSafeHdc(), LOGPIXELSX);
+	float fScale = 1.0f;
+	auto itScale = mapDPI.find(n);
+	if (mapDPI.end() != itScale)
+		fScale = itScale->second;
 
 	long nCreator = app.get_Creator();
 	if (0x5843454C != nCreator){ 
-		// Start Excel and get an Application object.
 		if (!app.CreateDispatch(TEXT("Excel.Application"))){
 			AfxMessageBox(TEXT("Couldn't start Excel and get Application object."));
 			return;
@@ -231,8 +243,12 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	//设置excel窗口样式，笔记本安装了office2016，无效
 	HWND hWnd = (HWND)app.get_Hwnd();
 	LONG nStyle = ::GetWindowLongPtr(hWnd, GWL_STYLE);
-	nStyle &= ~(WS_BORDER | WS_OVERLAPPEDWINDOW | WS_HSCROLL | WS_SIZEBOX);
+	//nStyle &= ~(WS_BORDER | WS_OVERLAPPEDWINDOW | WS_HSCROLL | WS_SIZEBOX);
+	nStyle &= ~(WS_OVERLAPPEDWINDOW);
 	::SetWindowLongPtr(hWnd, GWL_STYLE, nStyle);
+	//::SetMenu(hWnd, 0);
+	//在对话框上面显示
+	::SetWindowPos(hWnd, GetSafeHwnd(), 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 
 	//设置excel程序的位置
 	CRect rc;
@@ -240,22 +256,38 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	ClientToScreen(&rc);
 
 	//如果excel全屏显示了，就不能设置Left，或者Left值无效都会报错
-	
 	app.put_DisplayFullScreen(FALSE);
-	app.put_Left(rc.left * 3 / 4);
-	app.put_Top(rc.top * 3 / 4);
-	app.put_Width(rc.Width() * 3 / 4);
-	app.put_Height(rc.Height() * 3 / 4 - 30);
+	app.put_Left(rc.left * 3 / 4 / fScale);
+	app.put_Top(rc.top * 3 / 4 / fScale);
+	app.put_Width(rc.Width() * 3 / 4 / fScale);
+	app.put_Height(rc.Height() * 3 / 4 / fScale - 30);
 
 	//app.get_MenuBars()
 	//app.put_AlwaysUseClearType(TRUE);
+	//公式栏、滚动条、状态栏、关闭程序不提示“保存”
 	app.put_DisplayFormulaBar(FALSE);
 	app.put_DisplayScrollBars(FALSE);
 	app.put_DisplayStatusBar(FALSE);
-	app.put_DisplayAlerts(FALSE); //关闭程序不提示“保存”
+	app.put_DisplayAlerts(FALSE); 
+	
 	//app.put_ShowMenuFloaties(FALSE);
 	//app.put_ShowDevTools(FALSE);
 	//app.put_CalculateBeforeSave(FALSE);
+
+	//隐藏ribbon
+	//app.ExecuteExcel4Macro(_T("SHOW.TOOLBAR(""Ribbon"", False)"));
+	app.ExecuteExcel4Macro(_T("SHOW.TOOLBAR(\"Ribbon\", False)"));
+
+	//CMenuBars menuBars = app.get_MenuBars();
+	//long nCnts = menuBars.get_Count();
+
+	//for (long i = 1; i <= nCnts; ++i) {
+	//	CMenuBar mb = menuBars.get_Item(COleVariant((short)i));
+	//	CString str = mb.get_Caption();
+	//	str = _T("");
+	//	
+	//}
+	
 
 	CWorkbooks books;
 	CWorkbook book;
@@ -263,12 +295,13 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	CWorksheet sheet;
 
 	books = app.get_Workbooks();
-	book = books.Add(covOptional); //新建一个workbook
+	book = books.Add(covOptional); //新建一个workbook，所以下次点击Run时会是“工作簿2”
 
 	//Get the first sheet.
 	sheets = book.get_Worksheets(); //获取worksheets
 	sheet = sheets.get_Item(COleVariant((short)1));
-	
+	//sheet.Activate();
+
 	//long nCnt = sheets.get_Count();
 	//for (long i = 2; i <= nCnt; ++i) {
 	//	CWorksheet tmpSheet = sheets.get_Item(COleVariant((short)i));
@@ -335,23 +368,27 @@ void CAutomateExcelDlg::OnBnClickedRun()
 
 
 	//Format A1:C1 as bold, vertical alignment = center.
-	range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("C1")));
-	font = range.get_Font();
-	font.put_Bold(covTrue);
-	range.put_VerticalAlignment(COleVariant((short)-4108));   //xlVAlignCenter = -4108
+	//range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("C1")));
+	//font = range.get_Font();
+	//font.put_Bold(covTrue);
+	//range.put_VerticalAlignment(COleVariant((short)-4108));   //xlVAlignCenter = -4108
 
 	//AutoFit columns A:D.
-	range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("D1")));
-	CRange cols;
-	cols = range.get_EntireColumn();
-	cols.AutoFit();
+	//range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("D1")));
+	//CRange cols;
+	//cols = range.get_EntireColumn();
+	//cols.AutoFit();
 
 	//Adding Chart
-	//CCharts charts;
-	//CChart chart;
-	//charts = book.get_Charts();
-	//chart = charts.Add(covOptional, covOptional, covOptional);
+	CCharts charts;
+	CChart chart;
+	charts = book.get_Charts();
+	chart = charts.Add(covOptional, covOptional, covOptional);
+	//chart.put_Name(_T("测试图表"));
 
+
+	app.put_Interactive(FALSE);
+	app.put_Cursor(1);
 	app.put_Visible(TRUE);
 	app.put_UserControl(TRUE);
 }

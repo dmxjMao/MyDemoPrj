@@ -192,10 +192,17 @@
   <ItemGroup>
     <ClInclude Include="AutomateExcel.h" />
     <ClInclude Include="AutomateExcelDlg.h" />
+    <ClInclude Include="CAddIn.h" />
+    <ClInclude Include="CAddIns.h" />
     <ClInclude Include="CApplication.h" />
     <ClInclude Include="CChart.h" />
     <ClInclude Include="CCharts.h" />
     <ClInclude Include="CFont0.h" />
+    <ClInclude Include="CMenu0.h" />
+    <ClInclude Include="CMenuBar.h" />
+    <ClInclude Include="CMenuBars.h" />
+    <ClInclude Include="CMenuItem.h" />
+    <ClInclude Include="CMenuItems.h" />
     <ClInclude Include="CRange.h" />
     <ClInclude Include="CWindow0.h" />
     <ClInclude Include="CWindows.h" />
