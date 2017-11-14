@@ -70,27 +70,6 @@
     <ClInclude Include="CWindow0.h">
       <Filter>Header Files\excel</Filter>
     </ClInclude>
-    <ClInclude Include="CMenuBar.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
-    <ClInclude Include="CMenuBars.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
-    <ClInclude Include="CMenu0.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
-    <ClInclude Include="CMenuItem.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
-    <ClInclude Include="CMenuItems.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
-    <ClInclude Include="CAddIns.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
-    <ClInclude Include="CAddIn.h">
-      <Filter>Header Files\excel</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutomateExcel.cpp">

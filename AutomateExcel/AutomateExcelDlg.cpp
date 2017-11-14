@@ -19,8 +19,7 @@
 #include "CWorksheets.h"
 #include "CChart.h"
 #include "CCharts.h"
-#include "CMenuBars.h"
-#include "CMenuBar.h"
+
 
 #include <map>
 
@@ -317,8 +316,8 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	wnd = wnds.get_Item(COleVariant((short)1));
 	
 	//wnd.put_DisplayFormulas(FALSE);
-	wnd.put_DisplayGridlines(FALSE);
-	wnd.put_DisplayHeadings(FALSE);
+	//wnd.put_DisplayGridlines(FALSE);
+	//wnd.put_DisplayHeadings(FALSE);
 
 	//nCnt = 0;
 
@@ -379,16 +378,21 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	//cols = range.get_EntireColumn();
 	//cols.AutoFit();
 
-	//Adding Chart
+	//添加图表
 	CCharts charts;
 	CChart chart;
 	charts = book.get_Charts();
 	chart = charts.Add(covOptional, covOptional, covOptional);
-	//chart.put_Name(_T("测试图表"));
+	
+	//显示柱形图
+	chart.ApplyCustomType(51, COleVariant());
+	range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("C6")));
+	chart.SetSourceData(range, COleVariant());
+	// chart.ColumnGroups(COleVariant());
+	//long nCnt = chart
 
-
-	app.put_Interactive(FALSE);
-	app.put_Cursor(1);
+	//app.put_Interactive(FALSE);
+	//app.put_Cursor(1);
 	app.put_Visible(TRUE);
 	app.put_UserControl(TRUE);
 }
