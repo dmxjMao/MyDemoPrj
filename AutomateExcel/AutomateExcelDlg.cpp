@@ -231,6 +231,13 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	if (mapDPI.end() != itScale)
 		fScale = itScale->second;
 
+	//只能点一次Run
+	//if (!app.CreateDispatch(TEXT("Excel.Application"))) {
+	//	AfxMessageBox(TEXT("Couldn't start Excel and get Application object."));
+	//	return;
+	//}
+
+	//会创建多个工作簿
 	long nCreator = app.get_Creator();
 	if (0x5843454C != nCreator){ 
 		if (!app.CreateDispatch(TEXT("Excel.Application"))){
@@ -254,12 +261,24 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	GetClientRect(&rc);
 	ClientToScreen(&rc);
 
+	//static int i = 0;
+	//CRect rc2[2];
+	//rc2[0].SetRect(0, 0, (int)(rc.Width() / 2 * 3 / 4 / fScale),(int)(rc.Height() * 3 / 4 / fScale) - 30);
+	//rc2[1].SetRect(rc2[0].right, 0, (int)(rc.Width() * 3 / 4 / fScale), rc2[0].Height());
+
 	//如果excel全屏显示了，就不能设置Left，或者Left值无效都会报错
 	app.put_DisplayFullScreen(FALSE);
 	app.put_Left(rc.left * 3 / 4 / fScale);
 	app.put_Top(rc.top * 3 / 4 / fScale);
 	app.put_Width(rc.Width() * 3 / 4 / fScale);
 	app.put_Height(rc.Height() * 3 / 4 / fScale - 30);
+	//i %= 2;
+	//app.put_Left(rc2[i].left);
+	//app.put_Top(rc2[i].top);
+	//app.put_Width(rc2[i].Width());
+	//app.put_Height(rc2[i].Height());
+	//++i;
+	//excel会跟着移动
 
 	//app.get_MenuBars()
 	//app.put_AlwaysUseClearType(TRUE);
@@ -387,12 +406,13 @@ void CAutomateExcelDlg::OnBnClickedRun()
 	//显示柱形图
 	chart.ApplyCustomType(51, COleVariant());
 	range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("C6")));
-	chart.SetSourceData(range, COleVariant());
+	COleVariant plotBy((short)2);
+	chart.SetSourceData(range, plotBy);
 	// chart.ColumnGroups(COleVariant());
 	//long nCnt = chart
 
-	//app.put_Interactive(FALSE);
-	//app.put_Cursor(1);
+	app.put_Interactive(FALSE);
+	app.put_Cursor(1);
 	app.put_Visible(TRUE);
 	app.put_UserControl(TRUE);
 }
@@ -483,8 +503,29 @@ void CAutomateExcelDlg::OnClose()
 
 	//COleVariant filename(_T("excel_demo"));
 	//app.Save(filename);
-
+	RestoreExcelStyle();
 	app.Quit();
 
 	CDialogEx::OnClose();
 }
+
+void CAutomateExcelDlg::RestoreExcelStyle()
+{
+	HWND hWnd = (HWND)app.get_Hwnd();
+	LONG nStyle = ::GetWindowLongPtr(hWnd, GWL_STYLE);
+	nStyle |= WS_OVERLAPPEDWINDOW;
+	::SetWindowLongPtr(hWnd, GWL_STYLE, nStyle);
+
+	//app.put_DisplayFullScreen(FALSE);
+	//app.put_Left(rc.left * 3 / 4 / fScale);
+	//app.put_Top(rc.top * 3 / 4 / fScale);
+	//app.put_Width(rc.Width() * 3 / 4 / fScale);
+	//app.put_Height(rc.Height() * 3 / 4 / fScale - 30);); 	
+
+	app.ExecuteExcel4Macro(_T("SHOW.TOOLBAR(\"Ribbon\", True)"));
+
+	app.put_DisplayFormulaBar(TRUE);
+	app.put_DisplayScrollBars(TRUE);
+	app.put_DisplayStatusBar(TRUE);
+	//app.put_DisplayAlerts(TRUE);
+}	
