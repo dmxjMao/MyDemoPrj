@@ -66,6 +66,12 @@
     <ClInclude Include="CWorksheets0.h">
       <Filter>Header Files\excel</Filter>
     </ClInclude>
+    <ClInclude Include="CWindows.h">
+      <Filter>Header Files\excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CWindow0.h">
+      <Filter>Header Files\excel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Embed_Excel.cpp">

@@ -193,6 +193,8 @@
     <ClInclude Include="CntrItem.h" />
     <ClInclude Include="CRange0.h" />
     <ClInclude Include="CRanges.h" />
+    <ClInclude Include="CWindow0.h" />
+    <ClInclude Include="CWindows.h" />
     <ClInclude Include="CWorkbook0.h" />
     <ClInclude Include="CWorkbooks0.h" />
     <ClInclude Include="CWorksheet0.h" />

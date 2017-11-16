@@ -25,7 +25,7 @@ public:
 		{ return reinterpret_cast<CEmbed_ExcelDoc*>(COleClientItem::GetDocument()); }
 	CEmbed_ExcelView* GetActiveView()
 		{ return reinterpret_cast<CEmbed_ExcelView*>(COleClientItem::GetActiveView()); }
-	
+
 	LPDISPATCH GetIDispatch();
 
 public:

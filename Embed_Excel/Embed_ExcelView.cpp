@@ -23,6 +23,8 @@
 #include "CWorksheets0.h"
 #include "CWorksheet0.h"
 #include "CRange0.h"
+#include "CWindows.h"
+#include "CWindow0.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -354,7 +356,9 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 
 	// Launch the server to edit the item.
 	pItem->DoVerb(OLEIVERB_SHOW, this);
+	pItem->Close();
 
+	
 
 	// As an arbitrary user interface design, this sets the
 	// selection to the last item inserted.
@@ -366,6 +370,8 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 	LPDISPATCH lpDisp;
 	lpDisp = pItem->GetIDispatch();
 
+
+	
 	//Add text in cell A1 of the embedded Excel sheet
 	
 	//_Workbook wb;
@@ -388,6 +394,7 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 	
 	book.AttachDispatch(lpDisp);
 	app = book.get_Application();
+
 	sheets = book.get_Worksheets();
 	sheet = sheets.get_Item(COleVariant((short)1));
 
@@ -395,13 +402,28 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 	range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("A1")));
 	range.put_Value2(COleVariant(_T("Hello, World!")));
 
+
+	app.ExecuteExcel4Macro(_T("SHOW.TOOLBAR(\"Ribbon\", False)"));
+	app.put_DisplayScrollBars(FALSE);
+	app.put_DisplayStatusBar(FALSE);
+	app.put_DisplayFormulaBar(FALSE);
+	//app.put_DisplayAlerts(FALSE);
+
+	CWindows wnds; //一个worksheet算一个窗口
+	wnds = app.get_Windows();
+
+	CWindow0 wnd;
+	wnd = wnds.get_Item(COleVariant((short)1));
+
+	//wnd.put_DisplayFormulas(FALSE);
+	wnd.put_DisplayGridlines(FALSE);
+	wnd.put_DisplayHeadings(FALSE);
+
 	//Then get the first worksheet in the workbook
 	//wsSet = wb.GetWorksheets();
 	
 	//ws = wsSet.GetItem(COleVariant((short)1));
-	
 
-	
 	//From there, get a Range object corresponding to cell A1.
 	
 
