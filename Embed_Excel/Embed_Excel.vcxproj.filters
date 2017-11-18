@@ -16,6 +16,9 @@
     <Filter Include="Header Files\excel">
       <UniqueIdentifier>{83659ba1-e37d-4c92-bada-408499a03c6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\excel\chart">
+      <UniqueIdentifier>{fce9edc3-e5a8-4e82-9cd7-0e8295aa50fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -71,6 +74,12 @@
     </ClInclude>
     <ClInclude Include="CWindow0.h">
       <Filter>Header Files\excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CChart0.h">
+      <Filter>Header Files\excel\chart</Filter>
+    </ClInclude>
+    <ClInclude Include="CCharts0.h">
+      <Filter>Header Files\excel\chart</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

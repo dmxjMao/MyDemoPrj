@@ -26,10 +26,33 @@
 #include "CWindows.h"
 #include "CWindow0.h"
 
+
+#include "CChart0.h"
+#include "CCharts0.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+
+void FillSafeArray(OLECHAR FAR* sz, int iRow, int iCol,
+	COleSafeArray* sa)
+{
+
+	VARIANT v;
+	long index[2];
+
+	index[0] = iRow;
+	index[1] = iCol;
+
+	VariantInit(&v);
+	v.vt = VT_BSTR;
+	v.bstrVal = SysAllocString(sz);
+	sa->PutElement(index, v.bstrVal);
+	SysFreeString(v.bstrVal);
+	VariantClear(&v);
+
+}
 
 // CEmbed_ExcelView
 
@@ -327,121 +350,100 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 	CEmbed_ExcelCntrItem* pItem = NULL;
 	TRY
 	{
-		//Get the document associated with this view, and be sure it's
-		//valid.
+		//创建“站点对象”
 		CEmbed_ExcelDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
+		pItem = new CEmbed_ExcelCntrItem(pDoc);
 
-	//Create a new item associated with this document, and be sure
-	//it's valid.
-	pItem = new CEmbed_ExcelCntrItem(pDoc);
-	ASSERT_VALID(pItem);
+		//创建“ole对象”并关联“站点对象”
+		CLSID clsid;
+		if (FAILED(::CLSIDFromProgID(L"Excel.sheet",&clsid)))
+			AfxThrowMemoryException();
 
-	// Get Class ID for Excel sheet.
-	// This is used in creation.
-	CLSID clsid;
-	if (FAILED(::CLSIDFromProgID(L"Excel.sheet",&clsid)))
-		//Any exception will do. We just need to break out of the
-		//TRY statement.
-		AfxThrowMemoryException();
+		if (!pItem->CreateNewItem(clsid))
+			AfxThrowMemoryException();
 
-	// Create the Excel embedded item.
-	if (!pItem->CreateNewItem(clsid))
-		//Any exception will do. We just need to break out of the
-		//TRY statement.
-		AfxThrowMemoryException();
+		// 现场激活
+		//pItem->DoVerb(OLEIVERB_SHOW, this);
+		//pItem->Close();
 
-	//Make sure the new CContainerItem is valid.
-	ASSERT_VALID(pItem);
+		// As an arbitrary user interface design, this sets the
+		// selection to the last item inserted.
+		m_pSelection = pItem;   // set selection to last inserted item
+		pDoc->UpdateAllViews(NULL);
 
-	// Launch the server to edit the item.
-	pItem->DoVerb(OLEIVERB_SHOW, this);
-	pItem->Close();
+		//Query for the dispatch pointer for the embedded object. In
+		//this case, this is the Excel worksheet.
+		LPDISPATCH lpDisp;
+		lpDisp = pItem->GetIDispatch();
 
+		CApplication0 app;
+		CWorkbook0 book;
+		CWorksheets0 sheets;
+		CWorksheet0 sheet;
 	
+		//不能直接这样，因为sheet页并没有创建窗口，只有new 了对象(LPDISPATCH)
+		//sheet.AttachDispatch(lpDisp);
+		
+		book.AttachDispatch(lpDisp);
+		//app = book.get_Application();
+		sheets = book.get_Worksheets();
+		sheet = sheets.get_Item(COleVariant((short)1));
 
-	// As an arbitrary user interface design, this sets the
-	// selection to the last item inserted.
-	m_pSelection = pItem;   // set selection to last inserted item
-	pDoc->UpdateAllViews(NULL);
+		CRange0 range;
+		range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("A1")));
+		range.put_Value2(COleVariant(TEXT("Average precipation (mm)")));
+		range = sheet.get_Range(COleVariant(TEXT("A1")), COleVariant(TEXT("C1")));
+		range = sheet.get_Range(COleVariant(TEXT("B2")), COleVariant(TEXT("B2")));
+		range.put_Value2(COleVariant(TEXT("Acapulco")));
+		range = sheet.get_Range(COleVariant(TEXT("C2")), COleVariant(TEXT("C2")));
+		range.put_Value2(COleVariant(TEXT("Amsterdam")));
 
-	//Query for the dispatch pointer for the embedded object. In
-	//this case, this is the Excel worksheet.
-	LPDISPATCH lpDisp;
-	lpDisp = pItem->GetIDispatch();
+		//Fill A3:A6 with an array of values (Months).
+		COleSafeArray saRet;
+		DWORD numElements[] = { 4,1 };   //4x1 element array
+		saRet.Create(VT_BSTR, 2, numElements);
 
+		FillSafeArray(L"January", 0, 0, &saRet);
+		FillSafeArray(L"April", 1, 0, &saRet);
+		FillSafeArray(L"July", 2, 0, &saRet);
+		FillSafeArray(L"October", 3, 0, &saRet);
 
-	
-	//Add text in cell A1 of the embedded Excel sheet
-	
-	//_Workbook wb;
-	//Worksheets wsSet;
-	//_Worksheet ws;
-	//Range range;
-	//_Application app;
+		range = sheet.get_Range(COleVariant(TEXT("A3")), COleVariant(TEXT("A6")));
+		range.put_Value2(COleVariant(saRet));
+		saRet.Detach();
 
-	//set _Workbook wb to use lpDisp, the IDispatch* of the
-	//actual workbook.
-	//wb.AttachDispatch(lpDisp);
-	//app = wb.GetApplication();
+		//Fill B3:C6 with values
+		range = sheet.get_Range(COleVariant(TEXT("B3")), COleVariant(TEXT("B3")));
+		range.put_Value2(COleVariant(short(10)));
+		range = sheet.get_Range(COleVariant(TEXT("B4")), COleVariant(TEXT("B4")));
+		range.put_Value2(COleVariant(short(69)));
+		range = sheet.get_Range(COleVariant(TEXT("B5")), COleVariant(TEXT("B5")));
+		range.put_Value2(COleVariant(short(5)));
+		range = sheet.get_Range(COleVariant(TEXT("B6")), COleVariant(TEXT("B6")));
+		range.put_Value2(COleVariant(short(53)));
+		range = sheet.get_Range(COleVariant(TEXT("C3")), COleVariant(TEXT("C3")));
+		range.put_Value2(COleVariant(short(208)));
+		range = sheet.get_Range(COleVariant(TEXT("C4")), COleVariant(TEXT("C4")));
+		range.put_Value2(COleVariant(short(76)));
+		range = sheet.get_Range(COleVariant(TEXT("C5")), COleVariant(TEXT("C5")));
+		range.put_Value2(COleVariant(short(145)));
+		range = sheet.get_Range(COleVariant(TEXT("C6")), COleVariant(TEXT("C6")));
+		range.put_Value2(COleVariant(short(74)));
 
-	//Then get the worksheet's application.
+		COleVariant	covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
+		//添加图表
+		CCharts0 charts;
+		CChart0 chart;
+		charts = book.get_Charts();
+		chart = charts.Add(covOptional, covOptional, covOptional);
 
-	CApplication0 app;
-	CWorkbook0 book;
-	CWorksheets0 sheets;
-	CWorksheet0 sheet;
-	
-	book.AttachDispatch(lpDisp);
-	app = book.get_Application();
-
-	sheets = book.get_Worksheets();
-	sheet = sheets.get_Item(COleVariant((short)1));
-
-	CRange0 range;
-	range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("A1")));
-	range.put_Value2(COleVariant(_T("Hello, World!")));
-
-
-	app.ExecuteExcel4Macro(_T("SHOW.TOOLBAR(\"Ribbon\", False)"));
-	app.put_DisplayScrollBars(FALSE);
-	app.put_DisplayStatusBar(FALSE);
-	app.put_DisplayFormulaBar(FALSE);
-	//app.put_DisplayAlerts(FALSE);
-
-	CWindows wnds; //一个worksheet算一个窗口
-	wnds = app.get_Windows();
-
-	CWindow0 wnd;
-	wnd = wnds.get_Item(COleVariant((short)1));
-
-	//wnd.put_DisplayFormulas(FALSE);
-	wnd.put_DisplayGridlines(FALSE);
-	wnd.put_DisplayHeadings(FALSE);
-
-	//Then get the first worksheet in the workbook
-	//wsSet = wb.GetWorksheets();
-	
-	//ws = wsSet.GetItem(COleVariant((short)1));
-
-	//From there, get a Range object corresponding to cell A1.
-	
-
-	//Fill A1 with the string "Hello, World!"
-	
-
-	//NOTE: If you are automating Excel 2002, the Range.SetValue method has an 
-	//additional optional parameter specifying the data type.  Because the 
-	//parameter is optional, existing code will still work correctly, but new 
-	//code should use the new convention.  The call for Excel2002 should look 
-	//like the following:
-
-	//range.SetValue( C<?xm-insertion_mark_start author="v-thomr" time="20070326T121607-0600"?>O<?xm-insertion_mark_end?><?xm-deletion_mark author="v-thomr" time="20070326T121606-0600" data="o"?>leVariant( (long)DISP_E_PARAMNOTFOUND, VT_ERROR ), 
-	//                COleVariant("Hello, World!"));
+		//显示柱形图
+		chart.ApplyCustomType(58, COleVariant());
+		range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("C6")));
+		COleVariant plotBy((short)2);
+		chart.SetSourceData(range, plotBy);
 	}
-
-		//Here, we need to do clean up if something went wrong.
-		CATCH(CException, e)
+	CATCH(CException, e)
 	{
 		if (pItem != NULL)
 		{
@@ -453,7 +455,5 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 	}
 	END_CATCH
 
-		//Set the cursor back to normal so the user knows exciting stuff
-		//is no longer happening.
-		EndWaitCursor();
+	EndWaitCursor();
 }

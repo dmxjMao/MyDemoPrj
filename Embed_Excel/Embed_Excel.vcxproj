@@ -190,6 +190,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CApplication0.h" />
+    <ClInclude Include="CChart0.h" />
+    <ClInclude Include="CCharts0.h" />
     <ClInclude Include="CntrItem.h" />
     <ClInclude Include="CRange0.h" />
     <ClInclude Include="CRanges.h" />
