@@ -93,23 +93,25 @@ void CEmbed_ExcelCntrItem::OnGetItemPosition(CRect& rPosition)
 
 	// TODO: return correct rectangle (in pixels) in rPosition
 
-	CSize size;
-	rPosition.SetRectEmpty();
-	if (GetExtent(&size, m_nDrawAspect))
-	{
-		CEmbed_ExcelView* pView = GetActiveView();
-		ASSERT_VALID(pView);
-		if (!pView)
-			return;
-		CDC *pDC = pView->GetDC();
-		ASSERT(pDC);
-		if (!pDC)
-			return;
-		pDC->HIMETRICtoLP(&size);
-		rPosition.SetRect(10, 10, size.cx + 10, size.cy + 10);
-	}
-	else
-		rPosition.SetRect(10, 10, 210, 210);
+	rPosition.SetRect(50, 50, 200, 200);
+
+	//CSize size;
+	//rPosition.SetRectEmpty();
+	//if (GetExtent(&size, m_nDrawAspect))
+	//{
+	//	CEmbed_ExcelView* pView = GetActiveView();
+	//	ASSERT_VALID(pView);
+	//	if (!pView)
+	//		return;
+	//	CDC *pDC = pView->GetDC();
+	//	ASSERT(pDC);
+	//	if (!pDC)
+	//		return;
+	//	pDC->HIMETRICtoLP(&size);
+	//	rPosition.SetRect(10, 10, size.cx + 10, size.cy + 10);
+	//}
+	//else
+	//	rPosition.SetRect(10, 10, 210, 210);
 }
 
 void CEmbed_ExcelCntrItem::OnActivate()
@@ -220,3 +222,8 @@ LPDISPATCH CEmbed_ExcelCntrItem::GetIDispatch()
 	ASSERT(lpDispatch != NULL);
 	return lpDispatch;
 }
+
+//BOOL CEmbed_ExcelCntrItem::CanActivate()
+//{
+//	return FALSE;
+//}

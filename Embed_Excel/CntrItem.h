@@ -46,5 +46,6 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 	virtual void Serialize(CArchive& ar);
+	//virtual BOOL CanActivate();
 };
 

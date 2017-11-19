@@ -116,8 +116,16 @@ void CEmbed_ExcelView::OnDraw(CDC* pDC)
 	if (m_pSelection != NULL)
 	{
 		CSize size;
-		CRect rect(10, 10, 210, 210);
-		
+		CRect rect(10, 10, 0, 0);
+
+		//CRect rc;
+		//GetClientRect(&rc);
+		//rc.SetRect(rc.left, rc.top, rc.right / 2, rc.bottom / 2);
+		//size.cx = rc.Width(); size.cy = rc.Height();
+		//pDC->LPtoHIMETRIC(&size);
+		//m_pSelection->SetExtent(size);
+		//size.cx = size.cy = 0;
+
 		if (m_pSelection->GetExtent(&size, m_pSelection->m_nDrawAspect))
 		{
 			pDC->HIMETRICtoLP(&size);
@@ -362,14 +370,12 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 		if (!pItem->CreateNewItem(clsid))
 			AfxThrowMemoryException();
 
-		// 现场激活
+		// 现场激活，若不支持激活，则会启动excel
 		//pItem->DoVerb(OLEIVERB_SHOW, this);
 		//pItem->Close();
 
-		// As an arbitrary user interface design, this sets the
-		// selection to the last item inserted.
 		m_pSelection = pItem;   // set selection to last inserted item
-		pDoc->UpdateAllViews(NULL);
+		//pDoc->UpdateAllViews(NULL);
 
 		//Query for the dispatch pointer for the embedded object. In
 		//this case, this is the Excel worksheet.
@@ -430,18 +436,21 @@ void CEmbed_ExcelView::EmbedAutomateExcel()
 		range = sheet.get_Range(COleVariant(TEXT("C6")), COleVariant(TEXT("C6")));
 		range.put_Value2(COleVariant(short(74)));
 
-		COleVariant	covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
-		//添加图表
-		CCharts0 charts;
-		CChart0 chart;
-		charts = book.get_Charts();
-		chart = charts.Add(covOptional, covOptional, covOptional);
+		//就是因为在sheet里显示了图表，导致ole尺寸变得很小
+		//COleVariant	covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
+		////添加图表
+		//CCharts0 charts;
+		//CChart0 chart;
+		//charts = book.get_Charts();
+		//chart = charts.Add(covOptional, covOptional, covOptional);
 
-		//显示柱形图
-		chart.ApplyCustomType(58, COleVariant());
-		range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("C6")));
-		COleVariant plotBy((short)2);
-		chart.SetSourceData(range, plotBy);
+		////显示柱形图
+		//chart.ApplyCustomType(58, COleVariant());
+		//range = sheet.get_Range(COleVariant(_T("A1")), COleVariant(_T("C6")));
+		//COleVariant plotBy((short)2);
+		//chart.SetSourceData(range, plotBy);
+
+		//pItem->Close();
 	}
 	CATCH(CException, e)
 	{
