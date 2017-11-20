@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AutomateExcel", "AutomateEx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Embed_Excel", "Embed_Excel\Embed_Excel.vcxproj", "{BBF4DBFA-EF5C-4693-9254-E3652FB65E10}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OwnDraw", "OwnDraw\OwnDraw.vcxproj", "{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,14 @@ Global
 		{BBF4DBFA-EF5C-4693-9254-E3652FB65E10}.Release|x64.Build.0 = Release|x64
 		{BBF4DBFA-EF5C-4693-9254-E3652FB65E10}.Release|x86.ActiveCfg = Release|Win32
 		{BBF4DBFA-EF5C-4693-9254-E3652FB65E10}.Release|x86.Build.0 = Release|Win32
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Debug|x64.ActiveCfg = Debug|x64
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Debug|x64.Build.0 = Debug|x64
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Debug|x86.ActiveCfg = Debug|Win32
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Debug|x86.Build.0 = Debug|Win32
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Release|x64.ActiveCfg = Release|x64
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Release|x64.Build.0 = Release|x64
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Release|x86.ActiveCfg = Release|Win32
+		{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
