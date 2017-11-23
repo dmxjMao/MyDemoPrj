@@ -14,6 +14,7 @@
 
 #pragma once
 
+class CWebBrowser2;
 
 class CSplitterWndView : public CView
 {
@@ -33,6 +34,7 @@ public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
+	std::shared_ptr<CWebBrowser2> m_ie;
 
 // Implementation
 public:
@@ -50,6 +52,9 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnAddChart();
 };
 
 #ifndef _DEBUG  // debug version in SplitterWndView.cpp

@@ -50,7 +50,7 @@ BOOL CEmbedIEDlg::OnInitDialog()
 	//m_ie.put_Height(rc.Height() - 16);
 
 	//œ‘ æhtml
-	m_htmlPath = _T("E:\\maoyinan\\prj\\MyDemoPrj\\IEWebBrowser\\EChart\\html\\bar.html");
+	m_htmlPath = _T("D:\\MyProject\\VC\\MyDemoPrj\\IEWebBrowser\\EChart\\html\\bar.html");
 	m_ie.Navigate(m_htmlPath, 0, 0, 0, 0);
 	
 

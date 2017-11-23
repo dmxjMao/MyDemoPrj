@@ -41,6 +41,7 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
+#include <afxdisp.h>
 
 
 
@@ -61,3 +62,10 @@
 #endif
 
 
+
+#include <memory>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+using namespace std;

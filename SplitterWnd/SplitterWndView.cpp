@@ -22,6 +22,8 @@
 #include "SplitterWndDoc.h"
 #include "SplitterWndView.h"
 
+#include "CWebBrowser2.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -34,13 +36,15 @@ IMPLEMENT_DYNCREATE(CSplitterWndView, CView)
 BEGIN_MESSAGE_MAP(CSplitterWndView, CView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_SIZE()
+	ON_COMMAND(ID_AddChart, &CSplitterWndView::OnAddChart)
 END_MESSAGE_MAP()
 
 // CSplitterWndView construction/destruction
 
 CSplitterWndView::CSplitterWndView()
 {
-	// TODO: add construction code here
+	m_ie = make_shared<CWebBrowser2>();
 
 }
 
@@ -104,3 +108,40 @@ CSplitterWndDoc* CSplitterWndView::GetDocument() const // non-debug version is i
 
 
 // CSplitterWndView message handlers
+
+
+void CSplitterWndView::OnSize(UINT nType, int cx, int cy)
+{
+	CView::OnSize(nType, cx, cy);
+
+	
+}
+
+
+void CSplitterWndView::OnAddChart()
+{
+	CRect rc;
+	GetClientRect(&rc);
+
+	if (0 == m_ie->GetSafeHwnd()) {
+		if (!m_ie->Create(0, WS_CHILD | WS_VISIBLE, rc, this, 100)) {
+			AfxMessageBox(_T("创建ie组件失败！"));
+			return;
+		}
+	}
+	//ModifyStyle(WS_HSCROLL | WS_VSCROLL, 0);
+
+	CString str(_T("D:\\MyProject\\VC\\MyDemoPrj\\Debug\\echart\\myEChart.html"));
+
+	/*m_ie->EnableScrollBarCtrl(SB_BOTH, FALSE);*/
+	//m_ie->ShowScrollBar(SB_BOTH, FALSE);
+
+	//HWND hWndIE = m_ie->GetSafeHwnd();
+	//InitializeFlatSB(hWndIE);
+	//FlatSB_EnableScrollBar(hWndIE, SB_BOTH, ESB_DISABLE_BOTH);
+	//FlatSB_ShowScrollBar(hWndIE, SB_BOTH, FALSE);
+
+
+	m_ie->Navigate(str, 0, 0, 0, 0);
+	
+}

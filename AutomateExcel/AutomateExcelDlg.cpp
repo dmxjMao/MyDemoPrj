@@ -52,6 +52,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 //	afx_msg void OnClose();
+
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -65,6 +66,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 //	ON_WM_CLOSE()
+ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -529,3 +531,5 @@ void CAutomateExcelDlg::RestoreExcelStyle()
 	app.put_DisplayStatusBar(TRUE);
 	//app.put_DisplayAlerts(TRUE);
 }	
+
+
