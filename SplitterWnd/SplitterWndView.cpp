@@ -23,10 +23,16 @@
 #include "SplitterWndView.h"
 
 #include "CWebBrowser2.h"
+#include <MsHTML.h>
+
+#include <fstream>
+#include <json\json.h>
+#pragma comment(lib, "lib_json")
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 
 // CSplitterWndView
@@ -114,12 +120,24 @@ void CSplitterWndView::OnSize(UINT nType, int cx, int cy)
 {
 	CView::OnSize(nType, cx, cy);
 
-	
+	CRect rc;
+	GetClientRect(&rc);
+
+	HWND hIE = m_ie->GetSafeHwnd();
+	if (hIE) {
+		m_ie->SetWindowPos(0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOZORDER);
+		//通知设置网页大小
+
+	}
+
 }
+
+
 
 
 void CSplitterWndView::OnAddChart()
 {
+	
 	CRect rc;
 	GetClientRect(&rc);
 
@@ -133,15 +151,20 @@ void CSplitterWndView::OnAddChart()
 
 	CString str(_T("D:\\MyProject\\VC\\MyDemoPrj\\Debug\\echart\\myEChart.html"));
 
-	/*m_ie->EnableScrollBarCtrl(SB_BOTH, FALSE);*/
-	//m_ie->ShowScrollBar(SB_BOTH, FALSE);
-
-	//HWND hWndIE = m_ie->GetSafeHwnd();
-	//InitializeFlatSB(hWndIE);
-	//FlatSB_EnableScrollBar(hWndIE, SB_BOTH, ESB_DISABLE_BOTH);
-	//FlatSB_ShowScrollBar(hWndIE, SB_BOTH, FALSE);
-
 
 	m_ie->Navigate(str, 0, 0, 0, 0);
-	
+
+	CComQIPtr<IHTMLDocument2> spDoc = m_ie->get_Document();
+	CComDispatchDriver spScript;
+	if (NULL == spDoc) {
+		return;
+	}
+
+	HRESULT hr = spDoc->get_Script(&spScript);
+
+	//CComVariant varRet;
+	//COleVariant var(_T("hello,html! 30s刷新 我是猫二男。"));
+
+	// 设置标题
+	hr = spScript.Invoke2(_T("SetSubTitle"), 0, 0);
 }
