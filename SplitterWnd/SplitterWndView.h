@@ -35,6 +35,12 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
 	std::shared_ptr<CWebBrowser2> m_ie;
+	HANDLE m_hIE;
+	CComDispatchDriver m_spJScript;
+	bool ExecJsFun(const wstring& lpJsFun, const vector<wstring>& params);
+	//…Ë÷√htmlŒƒµµøÌ∏ﬂ
+	void SetHtmlDocmSize(int, int);
+	afx_msg void OnDocumentComplete(LPDISPATCH lpDisp, VARIANT FAR* URL);
 
 // Implementation
 public:
@@ -45,6 +51,7 @@ public:
 #endif
 
 protected:
+	DECLARE_EVENTSINK_MAP()
 
 // Generated message map functions
 protected:
@@ -55,6 +62,7 @@ protected:
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnAddChart();
+	afx_msg void OnHtmldlg();
 };
 
 #ifndef _DEBUG  // debug version in SplitterWndView.cpp

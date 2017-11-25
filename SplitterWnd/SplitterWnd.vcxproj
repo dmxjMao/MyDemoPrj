@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CWebBrowser2.h" />
+    <ClInclude Include="HtmlTestDlg.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SplitterWnd.h" />
@@ -199,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CWebBrowser2.cpp" />
+    <ClCompile Include="HtmlTestDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="SplitterWnd.cpp" />
     <ClCompile Include="SplitterWndDoc.cpp" />
