@@ -91,10 +91,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\JsonCpp\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -185,6 +188,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CWebBrowser2.h" />
+    <ClInclude Include="HtmlTestDlg.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SplitterWnd.h" />
@@ -194,6 +199,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CWebBrowser2.cpp" />
+    <ClCompile Include="HtmlTestDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="SplitterWnd.cpp" />
     <ClCompile Include="SplitterWndDoc.cpp" />
@@ -229,7 +236,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties RESOURCE_FILE="SplitterWnd.rc" />
+      <UserProperties _x007B_8856F961-340A-11D0-A96B-00C04FD705A2_x007D_="CWebBrowser2" RESOURCE_FILE="SplitterWnd.rc" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

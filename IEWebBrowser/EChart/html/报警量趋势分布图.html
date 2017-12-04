@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="style.css" type="text/css" rel="stylesheet" />
+    <title>报警量趋势分布图</title>
+    <!-- 引入 echarts.js -->
+    <script src="json2.js"></script>
+    <script src="echarts.min.js"></script>
+</head>
+<body style="margin:0;padding:0;background:#0c1137;">
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" height="100%" width="100%">
+        <div id="titleText" style="float:left;width:100%;height:10%;background:#0c1137;text-align:center;color:#EEEEEE;font-family:'黑体';"></div>
+        <div id="area1" style="float:left;width:33%;height:30%;background:#0c1137;"></div>
+        <div id="area2" style="float:left;width:33%;height:30%;background:#0c1137;"></div>
+        <div id="area3" style="float:left;width:33%;height:30%;background:#0c1137;"></div>
+        <div id="area4" style="float:left;width:100%;height:60%;background:#0c1137;"></div>
+    </div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        /*************************************************************
+        * 布局
+        *************************************************************/
+        var nWindowHeight = document.documentElement.clientHeight;
+        var nWindowWidth = document.documentElement.clientWidth;
+        document.getElementById("titleText").style.height = nWindowHeight * 0.1 + 'px';
+		document.getElementById("titleText").style.lineHeight = nWindowHeight * 0.1 + 'px';
+        document.getElementById("area1").style.height = nWindowHeight * 0.3 + 'px';
+        document.getElementById("area2").style.height = nWindowHeight * 0.3 + 'px';
+        document.getElementById("area3").style.height = nWindowHeight * 0.3 + 'px';
+        document.getElementById("area4").style.height = nWindowHeight * 0.60 + 'px';
+
+        /*************************************************************
+        * 报警等级分布（饼状）
+        *************************************************************/
+        var PieChart1 = echarts.init(document.getElementById('area1'));
+        var PieChart2 = echarts.init(document.getElementById('area2'));
+        var PieChart3 = echarts.init(document.getElementById('area3'));
+
+        // 指定图表的配置项和数据
+        var PieOption1 = {
+            title: {
+                text: '',
+                left: '20%',
+                top: '85%',
+                textStyle:
+				{
+				    color: '#EEEEEE',
+				    fontSize: 12
+				}
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            backgroundColor: ['#0D0330'],
+            legend: {
+                orient: 'vertical',
+                x: 'right',
+				itemGap:5,
+                data: [],
+                textStyle: {
+                    color: '#EEEEEE'
+                }
+            },
+            color: ['#FF0000', '#FF6464', '#A244FF', '#00FFFF', '#00FF40', '#A814BA', '#EEEEEE'],
+            series: {
+                name: '',
+                type: 'pie',
+                radius: ['40%', '80%'],
+                avoidLabelOverlap: false,
+                center: ['50%', '40%'],
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside',
+						formatter: '{c}({d}%)'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '20',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: []
+            }
+        };
+        var PieOption2 = PieOption1;
+        var PieOption3 = PieOption1;
+        /*************************************************************
+        * 报警量趋势（折线）
+        *************************************************************/
+        var LineChart = echarts.init(document.getElementById('area4'));
+        LineOption = {
+            title: {
+                text: '',
+                left: 'center',
+				textStyle:
+				{
+				    color: '#EEEEEE',
+				    fontSize: 12
+				}
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '数量:{c}'
+            },
+			backgroundColor: ['#0D0330'],
+            legend: {
+                left: 'right',
+                data: []
+            },
+            xAxis: {
+                type: 'category',
+                name: '',
+                splitLine: false,
+				axisLabel:{
+					textStyle:{
+						color: '#EEEEEE'
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: '#EEEEEE'
+					}
+				},
+                data: []
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis: {
+                type: 'value',
+                name: '数量',
+				splitLine: false,
+				axisLine:{
+					lineStyle:{
+						color: '#EEEEEE'
+					}
+				},
+				axisLabel:{
+					textStyle:{
+						color: '#EEEEEE'
+					}
+				}
+            },
+            series: [
+				{
+					label:{
+						normal:{
+							show:false,
+							fontSize:15,
+							position:'top',
+							color:'#003366'						
+						}
+					}
+				}
+			]
+        };
+
+        /*************************************************************
+        * 功能函数
+        *************************************************************/
+        function HTML_SetTitle(jsonData, value2) {
+            var obj = JSON.parse(jsonData);
+            if (obj.hasOwnProperty("title") == null)
+                return;
+            document.getElementById("titleText").style.fontSize = nWindowHeight * 0.06 + 'px';
+            document.getElementById("titleText").innerHTML = obj.title;
+        }
+
+        function HTML_SetData(jsonData, value2) {
+            var obj = JSON.parse(jsonData);
+            if (obj.hasOwnProperty("nIndex") == null || obj.hasOwnProperty("data") == null)
+                return;
+            var nIndex = obj.nIndex;
+            if (nIndex == 0)			// 饼状
+            {
+				PieOption1.color = ['#ff5040', '#f8b548', '#29cd7f', '#0096ff', '#345fec', '#d8de13', '#1aea80', '#4bc8ce', '#0088d6', '#6757df'];
+                PieOption1.series.data = [];
+                PieOption1.legend.data = [];
+                PieOption1.title.text = obj.title;
+                PieOption1.title.textStyle.fontSize = nWindowHeight * 0.3 * 0.1;
+				
+				var nOtherSum1 = 0;
+                for (index in obj.data) {
+					if(obj.data[index].value == 0)
+						continue;
+					if(index > 4){
+						nOtherSum1 = nOtherSum1 + obj.data[index].value;
+						continue;
+					}
+                    var item = JSON.parse("{\"value\":0,\"name\":\"\"}");
+                    item.value = obj.data[index].value;
+					item.name = obj.data[index].name;
+                    PieOption1.series.data.push(item);
+                    PieOption1.legend.data.push(obj.data[index].name);
+                }
+				if(obj.data.length > 5){
+					var item = JSON.parse("{\"value\":0,\"name\":\"\"}");
+					item.value = nOtherSum1;
+					item.name = '其他';
+					PieOption1.series.data.push(item);
+					PieOption1.legend.data.push(item.name);
+				}
+				
+                PieChart1.setOption(PieOption1, true);
+            }
+            else if (nIndex == 1)			// 饼状
+            {
+				PieOption2.color = ['#ff5040', '#f8b548', '#29cd7f', '#0096ff', '#345fec', '#d8de13', '#1aea80', '#4bc8ce', '#0088d6', '#6757df'];
+                PieOption2.series.data = [];
+                PieOption2.legend.data = [];
+                PieOption2.title.text = obj.title;
+                PieOption2.title.textStyle.fontSize = nWindowHeight * 0.3 * 0.1;
+				
+				var nOtherSum2 = 0;
+                for (index in obj.data) {
+					if(obj.data[index].value == 0)
+						continue;
+					if(index > 4){
+						nOtherSum2 = nOtherSum2 + obj.data[index].value;
+						continue;
+					}
+                    var item = JSON.parse("{\"value\":0,\"name\":\"\"}");
+                    item.value = obj.data[index].value;
+                    item.name = obj.data[index].name;
+                    PieOption2.series.data.push(item);
+                    PieOption2.legend.data.push(obj.data[index].name);
+					
+                }
+				if(obj.data.length > 5){
+					var item = JSON.parse("{\"value\":0,\"name\":\"\"}");
+					item.value = nOtherSum2;
+					item.name = '其他';
+					PieOption2.series.data.push(item);
+					PieOption2.legend.data.push(item.name);
+				}
+				
+                PieChart2.setOption(PieOption2, true);
+            }
+            else if (nIndex == 2)			// 饼状
+            {
+				PieOption3.color = ['#ff5040', '#f8b548', '#29cd7f', '#0096ff', '#345fec', '#d8de13', '#1aea80', '#4bc8ce', '#0088d6', '#6757df'];
+                PieOption3.series.data = [];
+                PieOption3.legend.data = [];
+                PieOption3.title.text = obj.title;
+                PieOption3.title.textStyle.fontSize = nWindowHeight * 0.3 * 0.1;
+				
+				var nOtherSum3 = 0;
+                for (index in obj.data) {
+					if(obj.data[index].value == 0)
+						continue;
+					if(index > 4){
+						nOtherSum3 = nOtherSum3 + obj.data[index].value;
+						continue;
+					}
+                    var item = JSON.parse("{\"value\":0,\"name\":\"\",\"label\":{\"normal\":{\"position\":\"inside\"}}}");
+                    item.value = obj.data[index].value;
+                    item.name = obj.data[index].name;
+                    PieOption3.series.data.push(item);
+                    PieOption3.legend.data.push(obj.data[index].name);
+                }
+				if(obj.data.length > 5){
+					var item = JSON.parse("{\"value\":0,\"name\":\"\"}");
+					item.value = nOtherSum3;
+					item.name = '其他';
+					PieOption3.series.data.push(item);
+					PieOption3.legend.data.push(item.name);
+				}
+				
+                PieChart3.setOption(PieOption3, true);
+            }
+            else if (nIndex == 3)	// 折线
+            {
+                LineOption.xAxis.data = [];
+				LineOption.series = [];
+				
+				
+				
+				//LineOption.series.label.normal.fontSize = 20;
+                LineOption.title.text = obj.title;
+				var titleLen = obj.title.length;
+				if(obj.title.charAt(titleLen-2) == '段'){
+					LineOption.xAxis.name = "时段"
+				}else{
+					LineOption.xAxis.name = "日期"
+				}
+                LineOption.title.textStyle.fontSize = nWindowHeight * 0.58 * 0.1;
+				var item = JSON.parse("{\"type\":\"line\",\"name\":\"\",\"label\":{\"normal\":{\"fontWeight\":\"bold\",\"fontSize\":15,\"rotate\":45}},\"lineStyle\":{\"normal\":{\"width\":4}},\"data\":[]}");
+                for (index in obj.data) {
+					LineOption.xAxis.data.push(obj.data[index].name);
+					var itemData = JSON.parse("{\"value\":0,\"label\":{\"normal\":{\"show\":false}}}");
+					//alert(itemData.label.normal.show);
+					//alert(obj.data[index].color);
+					if(obj.data[index].color == "1")
+						itemData.label.normal.show = true;
+						//(index);
+					//item.data.push(obj.data[index].value);
+					itemData.value = obj.data[index].value;
+					//alert(itemData.value);
+					item.data.push(itemData);
+					
+                }
+				LineOption.series.push(item);
+                //alert(JSON.stringify(LineOption));
+                LineChart.setOption(LineOption, true);
+            }
+        }
+        //PieChart1.setOption(PieOption1);
+        //PieChart2.setOption(PieOption2);
+        //PieChart3.setOption(PieOption3);
+        //LineChart.setOption(LineOption);
+    </script>
+</body>
+</html>

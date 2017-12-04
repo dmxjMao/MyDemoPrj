@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style type="text/css" media="screen">
+        html,body {
+            margin: 0px; padding: 0px; height: 100%;
+        }
+    </style>
+    <script src="echarts.js"></script>
+    <script src="json2.js"></script>
+    <script type="text/javascript">
+        function SetSubTitle(text){ //设置子标题
+            document.getElementById("subtitle").innerHTML = text;
+        }
+    </script>
+</head>
+<body scroll="no">
+    <div id="frame" style="height: 100%;">
+        <div id="title" class="title" style="font-size: 16pt; text-align: center;">网点报警量统计</div>
+        <div id="subtitle" class="title" style="font-size: 12pt; text-align: center;"><!-- 过去一周，60s刷新 --></div>
+        <div id="canvas1" style="height: 40%; min-width:100px; min-height: 150px;"></div>
+        <div id="canvas2" style="height: 50%;min-width:100px; min-height: 150px;"></div>
+    </div>
+    
+    <script type="text/javascript">
+
+        var myChart1 = echarts.init(document.getElementById("canvas1"));
+
+        var seriesLabel = {
+            normal: {
+                show: true, position: 'top', textBorderColor: '#FFFEFE', textBorderWidth: 2
+            }
+        }
+        // 指定图表配置项和数据
+        var option1 = {
+            // title: { text:'网点报警量', left:'center'},
+            tooltip:{ trigger: 'axis',axisPointer: {type:'shadow'}},
+            legend:{data:['已处理','未处理'],left:'right'},
+            xAxis:{
+                type: 'category', name: '网点',
+                data: []
+            },
+            yAxis:{type: 'value', name: '报警量', axisLabel: {formatter: '{value}'}},
+            dataZoom: [{
+                type: 'inside', xAxisIndex: 0, start: 0, end: 100
+            }, {
+                type: 'inside', yAxisIndex: 0, start: 0, end: 100
+            }],
+            series:[{
+                name: '已处理',
+                type: 'bar',
+                label: seriesLabel,
+                data: [] 
+            },
+            {
+                name: '未处理',
+                type: 'bar',
+                label: seriesLabel,
+                data: []
+            }
+            ]
+        };
+
+        myChart1.setOption(option1);
+        //myChart1.showLoading();
+        window.onresize = myChart1.resize;
+
+        function SetTitle(str){
+            myChart1.setOption({
+                title: { text: str }
+            });
+        }
+        // 函数
+        function SetData1(json){//设置图一数据
+            //myChart1.hideLoading();
+
+            var obj = JSON.parse(json);
+            if(obj.hasOwnProperty("data") == null)
+                return;
+ 
+            myChart1.setOption({
+                series: [{
+                    name: '销量',
+                    data: obj.data
+                }]
+            });
+        }
+        function SetData2(json){//设置图二数据
+            var obj = JSON.parse(json);
+            if(obj.hasOwnProperty("data") == null)
+                return;
+
+            
+        }
+    </script>
+</body>
+</html>

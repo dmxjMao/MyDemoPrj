@@ -20,6 +20,7 @@
 
 #include "SplitterWndDoc.h"
 #include "SplitterWndView.h"
+#include "CWebBrowser2.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -77,6 +78,7 @@ BOOL CSplitterWndApp::InitInstance()
 		return FALSE;
 	}
 
+	AfxEnableControlContainer();//ie×é¼þ
 	EnableTaskbarInteraction(FALSE);
 
 	// AfxInitRichEdit2() is required to use RichEdit control	
@@ -162,6 +164,8 @@ protected:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+//	afx_msg void OnAddChart();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -174,6 +178,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+//	ON_COMMAND(ID_AddChart, &CAboutDlg::OnAddChart)
 END_MESSAGE_MAP()
 
 // App command to run the dialog
@@ -206,3 +211,9 @@ void CSplitterWndApp::SaveCustomState()
 
 
 
+
+
+//void CAboutDlg::OnAddChart()
+//{
+//	// TODO: Add your command handler code here
+//}
