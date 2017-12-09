@@ -17,9 +17,8 @@ BEGIN_MESSAGE_MAP(COwnDrawApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
-//gdi+初始化
-ULONG_PTR gdiplusToken;
-GdiplusStartupInput gdiplusStartupInput;
+//程序级变量
+
 
 // COwnDrawApp construction
 
@@ -55,7 +54,11 @@ BOOL COwnDrawApp::InitInstance()
 	CWinApp::InitInstance();
 
 	//gdi+初始化
-	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
+	//默认字体
+	FontFamily ff(_T("宋体"));
+	Gdiplus::Font font(&ff, 12, FontStyleRegular, UnitPixel);
+	m_pFontDefault = font.Clone(); //m_pFontDefault在析构会删除自己
 
 	AfxEnableControlContainer();
 
@@ -76,6 +79,7 @@ BOOL COwnDrawApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
 	COwnDrawDlg dlg;
+	dlg & "btn:111";
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
@@ -113,7 +117,9 @@ BOOL COwnDrawApp::InitInstance()
 
 int COwnDrawApp::ExitInstance()
 {
-	GdiplusShutdown(gdiplusToken);
+	GdiplusShutdown(m_gdiplusToken);
+
+	//if (m_pFontDefault) { delete m_pFontDefault; m_pFontDefault = 0; }
 
 	return CWinApp::ExitInstance();
 }

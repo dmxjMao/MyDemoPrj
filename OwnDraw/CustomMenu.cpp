@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CustomMenu.h"
 
+using std::shared_ptr;
+using std::string;
 
 IMPLEMENT_DYNCREATE(CMyMenu1,CMenu)
 

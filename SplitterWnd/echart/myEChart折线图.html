@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style type="text/css" media="screen">
+        html,body {
+            /*height100%不然body高度为0*/
+            margin: 0px; padding: 0px; height: 100%;
+        }
+    </style>
+    <script src="echarts.js"></script>
+    <script type="text/javascript">
+        function SetSubTitle(text){ //设置子标题
+            document.getElementById("subtitle").innerHTML = text;
+        }
+    </script>
+</head>
+<!-- <body scroll="no"> -->
+<body>
+    <div id="frame" style="height: 100%;">
+        <div id="title" style="font-size: 16pt; text-align: center;">报警趋势图</div>
+        <div id="subtitle" style="font-size: 12pt; text-align: center;">过去一周</div>
+        <div id="canvas1" style="height: 90%;"></div>
+    </div>
+    
+    <script type="text/javascript"> 
+
+        var myChart = echarts.init(document.getElementById("canvas1"));
+
+        var option = {
+            tooltip:{ trigger: 'axis' },
+            xAxis:{ type: 'value', min: 20, max: 26 },
+            yAxis:{ type: 'value' },
+            series:[{
+                name: '报警量',
+                type: 'line',
+                smooth: true,
+                data: [ [20,10], [21,120], [22,21], [23,0], [24,260], [25,830], [26,710]],
+                markPoint:{
+                    symbolSize: 30,
+                    label: { normal: {
+                        formatter: '{x|{a}}\n{b}{y|{c}}\n',
+                        position: 'top',
+                        rich: {
+                            x:{ align: 'center' },
+                            y:{ color:'#ff8811' }
+                        }
+                    }},//label.normal
+                    data:[
+                        { name: '最大：', coord: [25,800], value: 800 },
+                        { name: '其次：', coord: [26,710], value: 710 },
+                        { name: '第三：', coord: [24,260], value: 260 }
+                        // {type: 'max', name: '最大：'}
+                    ]
+                }
+            }]
+        };
+
+        myChart.setOption(option);
+
+        // Layout(500,400);
+
+    </script>
+</body>
+</html>

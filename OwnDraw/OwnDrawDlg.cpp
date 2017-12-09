@@ -8,11 +8,15 @@
 #include "afxdialogex.h"
 
 #include "CustomMenu.h"//自绘菜单
+#include "MyButton1.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+using std::make_shared;
+using std::vector;
+using std::shared_ptr;
 
 // CAboutDlg dialog used for App About
 
@@ -60,6 +64,31 @@ COwnDrawDlg::COwnDrawDlg(CWnd* pParent /*=NULL*/)
 
 	m_pMenuPop1 = new CMenu;
 	m_pMyMenu1 = new CMyMenu1;
+
+	m_minBtn = make_shared<CMyButton1>();
+	(*m_minBtn) & "picture:res\\min_24px.ico";
+	m_maxBtn = make_shared<CMyButton1>();
+	(*m_maxBtn) & "picture:res\\max_24px.ico";
+	m_closeBtn = make_shared<CMyButton1>();
+	(*m_closeBtn) & "picture:res\\close_24px.ico";
+
+	try {
+		//ui属性正则
+		m_regex.assign(
+			"(?|"
+			"(fontSize):([0-9]+)|"//字体大小	
+			"(titleAlign):(left|center|right)|"//标题对齐
+			"(btn):([01]{3})"//最小最大化、关闭按钮： 0没有1有
+			")"
+			, boost::regex_constants::icase);
+	}
+	catch (boost::regex_error e) {
+		//theApp.WriteLog
+	}
+	//ui默认值
+	m_cfg["fontSize"] = "12";
+	m_cfg["titleAlign"] = "left";
+	m_cfg["btn"] = "001";
 }
 
 COwnDrawDlg::~COwnDrawDlg()
@@ -75,6 +104,9 @@ COwnDrawDlg::~COwnDrawDlg()
 void COwnDrawDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_minBtn, *m_minBtn);
+	DDX_Control(pDX, IDC_maxBtn, *m_maxBtn);
+	DDX_Control(pDX, IDC_closeBtn, *m_closeBtn);
 }
 
 BEGIN_MESSAGE_MAP(COwnDrawDlg, CDialogEx)
@@ -86,6 +118,7 @@ BEGIN_MESSAGE_MAP(COwnDrawDlg, CDialogEx)
 	ON_WM_CONTEXTMENU()
 	ON_WM_DRAWITEM()
 	ON_WM_MEASUREITEM()
+	ON_WM_NCHITTEST()
 END_MESSAGE_MAP()
 
 
@@ -115,25 +148,35 @@ BOOL COwnDrawDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 
+	//设置对话框样式：None
+	ModifyStyle(WS_OVERLAPPEDWINDOW, 0);
+
+
+
 	//UINT cyMenu = ::GetSystemMetrics(SM_CYMENU);
 	//CRect rc;
 	//GetClientRect(&rc);
 	//rc.SetRect(rc.left, rc.top, rc.right, rc.bottom + cyMenu);
 	//SetWindowPos(0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOACTIVATE | SWP_NOZORDER);
 
-	CMenu mu;
-	mu.LoadMenu(IDR_MENU1);
-	SetMenu(&mu);
+	//CMenu mu;
+	//mu.LoadMenu(IDR_MENU1);
+	//SetMenu(&mu);
 
 	//m_pMenuPop1->LoadMenu(IDM_Pop1);
 	//m_pMenuPop1.reset(m_pMenuPop1->GetSubMenu(0));
 	
-	m_pMenuPop1->LoadMenu(IDM_Pop1);
-	m_pMenuPop1 = m_pMenuPop1->GetSubMenu(0);
+	//m_pMenuPop1->LoadMenu(IDM_Pop1);
+	//m_pMenuPop1 = m_pMenuPop1->GetSubMenu(0);
 
-	m_pMyMenu1->LoadMenu(IDM_Pop2);
-	m_pMyMenu1 = (CMyMenu1*)m_pMyMenu1->GetSubMenu(0);
-	m_pMyMenu1->ChangeMenuItem(m_pMyMenu1);
+	//m_pMyMenu1->LoadMenu(IDM_Pop2);
+	//m_pMyMenu1 = (CMyMenu1*)m_pMyMenu1->GetSubMenu(0);
+	//m_pMyMenu1->ChangeMenuItem(m_pMyMenu1);
+
+	CRect rc;
+	GetClientRect(&rc);
+
+	
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -159,27 +202,69 @@ void COwnDrawDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void COwnDrawDlg::OnPaint()
 {
-	if (IsIconic())
-	{
-		CPaintDC dc(this); // device context for painting
+	//if (IsIconic())
+	//{
+	//	CPaintDC dc(this); // device context for painting
 
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+	//	SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Center icon in client rectangle
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
+	//	// Center icon in client rectangle
+	//	int cxIcon = GetSystemMetrics(SM_CXICON);
+	//	int cyIcon = GetSystemMetrics(SM_CYICON);
+	//	CRect rect;
+	//	GetClientRect(&rect);
+	//	int x = (rect.Width() - cxIcon + 1) / 2;
+	//	int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// Draw the icon
-		dc.DrawIcon(x, y, m_hIcon);
+	//	// Draw the icon
+	//	dc.DrawIcon(x, y, m_hIcon);
+	//}
+	//else
+	//{
+	//	CDialogEx::OnPaint();
+	//}
+
+	CPaintDC dc(this);
+	int x, y, w, h;
+	x = y = w = h = 0;
+	DWORD flag = SWP_NOZORDER | SWP_NOACTIVATE;
+
+	//自绘标题栏
+	CRect rc;
+	GetClientRect(&rc);
+	CRect rcTitle(0, 0, rc.right, theApp.m_nTitleHeight);
+	RectF rcGdi(0.0f, 0.0f, rcTitle.right*1.0f, rcTitle.bottom*1.0f);
+
+	Graphics gh(dc.GetSafeHdc());
+
+	SolidBrush br(theApp.m_clrTitle);
+	gh.FillRectangle(&br, rcGdi);
+	StringFormat strFormat;
+	auto& align = m_cfg["titleAlign"];
+	strFormat.SetLineAlignment(StringAlignmentCenter);
+	if ("center" == align)
+		strFormat.SetAlignment(StringAlignmentCenter);
+	else if("right" == align)
+		strFormat.SetAlignment(StringAlignmentFar);
+
+	SolidBrush brFont(theApp.m_clrFont);
+	gh.DrawString(m_strTitle, -1, theApp.m_pFontDefault, rcGdi, &strFormat, &brFont);
+
+	//最小最大关闭按钮，用Uxtheme不行，因为你先要有这个按钮，它是使用主题而不是画
+	const auto& btn = m_cfg["btn"];
+	std::bitset<3> bs(btn);
+	static vector<shared_ptr<CMyButton1>*> vecBtn = {
+		&m_minBtn,&m_maxBtn,&m_closeBtn 
+	};
+	w = theApp.m_nCloseBtnWidth;
+	for (auto i = 0; i < (int)vecBtn.size(); ++i) {
+		if (bs[i]) {//依此：关闭、最大、最小
+			(*vecBtn[i])->ShowWindow(SW_NORMAL);
+			x = rc.right - (3 - i) * (w) - theApp.m_nCloseBtnRightGap;
+			(*vecBtn[i])->SetWindowPos(0, x, 0, w, w, flag);
+		}
 	}
-	else
-	{
-		CDialogEx::OnPaint();
-	}
+
 }
 
 // The system calls this function to obtain the cursor to display while the user drags
@@ -246,4 +331,29 @@ void COwnDrawDlg::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStr
 	m_pMyMenu1->MeasureItem(lpMeasureItemStruct);
 
 	CDialogEx::OnMeasureItem(nIDCtl, lpMeasureItemStruct);
+}
+
+
+
+
+
+
+
+LRESULT COwnDrawDlg::OnNcHitTest(CPoint point)
+{
+	CRect rc;
+	GetClientRect(&rc);
+	CRect rcTitle(0, 0, rc.right, theApp.m_nTitleHeight);
+
+	UINT nHitTest = __super::OnNcHitTest(point);
+	if (HTCLIENT == nHitTest) {
+		ScreenToClient(&point);
+		BOOL b = rcTitle.PtInRect(point);
+		if (b) { //在标题区
+			nHitTest = HTCAPTION;
+		}
+	}
+	return nHitTest;
+
+	//return __super::OnNcHitTest(point);
 }

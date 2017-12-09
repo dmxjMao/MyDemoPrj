@@ -3,16 +3,24 @@
 //
 
 #pragma once
+#include "UICfg.h" //ui配置
 
 class CMyMenu1;//自绘菜单
+class CMyButton1;//最小最大化关闭按钮
 
 // COwnDrawDlg dialog
-class COwnDrawDlg : public CDialogEx
+class COwnDrawDlg : public CDialogEx, public CUICfg
 {
 // Construction
 public:
 	COwnDrawDlg(CWnd* pParent = NULL);	// standard constructor
 	~COwnDrawDlg();
+
+	//enum emCfg {
+	//	fontSizeCfg,
+	//	titleAlignCfg,
+	//	emCfgBuff
+	//};
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -26,6 +34,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	CString m_strTitle = _T("天跃智能环境监测系统——登录界面");//标题
 	//std::shared_ptr<CMenu> m_pMenuPop1 = 0;
 	CMenu* m_pMenuPop1 = 0;
 	CMyMenu1* m_pMyMenu1 = 0;
@@ -37,10 +46,17 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 
+	//virtual bool ParseCfg(const boost::smatch& cfg);
+
 public:
 	afx_msg void OnMenu1M1();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
+	afx_msg LRESULT OnNcHitTest(CPoint point);
+protected:
+	std::shared_ptr<CMyButton1> m_minBtn = 0;
+	std::shared_ptr<CMyButton1> m_maxBtn = 0;
+	std::shared_ptr<CMyButton1> m_closeBtn = 0;
 };

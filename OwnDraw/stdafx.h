@@ -54,11 +54,16 @@
 
 #include <memory>
 #include <vector>
+#include <string>
+#include <map>
+#include <unordered_map> //ÐÂ°æhash_map
+#include <bitset>
 #include <algorithm>
 #include <functional>
 
-using namespace std;
 
+#include <boost\regex.hpp>
+#include <boost\variant.hpp>
 
 #include <gdiplus.h>
 #pragma comment(lib,"Gdiplus.lib")
