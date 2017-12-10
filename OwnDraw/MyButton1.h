@@ -12,7 +12,14 @@ public:
 	virtual ~CMyButton1();
 
 protected:
+	//emBtnType m_nType = emBtnTypeBuff;//∞¥≈•¿‡–Õ
 	DECLARE_MESSAGE_MAP()
+
+public:
+	afx_msg void OnPaint();
+
+	virtual void PreSubclassWindow();
+	virtual void DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/);
 };
 
 

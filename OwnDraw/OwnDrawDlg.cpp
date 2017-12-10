@@ -9,6 +9,7 @@
 
 #include "CustomMenu.h"//自绘菜单
 #include "MyButton1.h"
+#include "MyCombo1.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -17,6 +18,8 @@
 using std::make_shared;
 using std::vector;
 using std::shared_ptr;
+using std::bitset;
+using std::string;
 
 // CAboutDlg dialog used for App About
 
@@ -56,7 +59,7 @@ END_MESSAGE_MAP()
 
 
 COwnDrawDlg::COwnDrawDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_OWNDRAW_DIALOG, pParent)
+	: /*CDialogEx*/CBaseDialog(IDD_OWNDRAW_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -64,13 +67,8 @@ COwnDrawDlg::COwnDrawDlg(CWnd* pParent /*=NULL*/)
 
 	m_pMenuPop1 = new CMenu;
 	m_pMyMenu1 = new CMyMenu1;
-
-	m_minBtn = make_shared<CMyButton1>();
-	(*m_minBtn) & "picture:res\\min_24px.ico";
-	m_maxBtn = make_shared<CMyButton1>();
-	(*m_maxBtn) & "picture:res\\max_24px.ico";
-	m_closeBtn = make_shared<CMyButton1>();
-	(*m_closeBtn) & "picture:res\\close_24px.ico";
+	
+	m_ctlUserName = make_shared<CMyCombo1>();
 
 	try {
 		//ui属性正则
@@ -104,12 +102,10 @@ COwnDrawDlg::~COwnDrawDlg()
 void COwnDrawDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_minBtn, *m_minBtn);
-	DDX_Control(pDX, IDC_maxBtn, *m_maxBtn);
-	DDX_Control(pDX, IDC_closeBtn, *m_closeBtn);
+	DDX_Control(pDX, IDC_UserName, *m_ctlUserName);
 }
 
-BEGIN_MESSAGE_MAP(COwnDrawDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(COwnDrawDlg, /*CDialogEx*/CBaseDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
@@ -118,7 +114,7 @@ BEGIN_MESSAGE_MAP(COwnDrawDlg, CDialogEx)
 	ON_WM_CONTEXTMENU()
 	ON_WM_DRAWITEM()
 	ON_WM_MEASUREITEM()
-	ON_WM_NCHITTEST()
+	ON_COMMAND_RANGE(IDC_minBtn, IDC_closeBtn, &COwnDrawDlg::OnBnClicked)
 END_MESSAGE_MAP()
 
 
@@ -126,7 +122,8 @@ END_MESSAGE_MAP()
 
 BOOL COwnDrawDlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	//CDialogEx::OnInitDialog();
+	__super::OnInitDialog();
 
 	// Add "About..." menu item to system menu.
 
@@ -146,11 +143,6 @@ BOOL COwnDrawDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-
-
-	//设置对话框样式：None
-	ModifyStyle(WS_OVERLAPPEDWINDOW, 0);
-
 
 
 	//UINT cyMenu = ::GetSystemMetrics(SM_CYMENU);
@@ -176,7 +168,30 @@ BOOL COwnDrawDlg::OnInitDialog()
 	CRect rc;
 	GetClientRect(&rc);
 
-	
+	const auto& btn = m_cfg["btn"];
+	bitset<3> bs(btn);
+	vector<shared_ptr<CMyButton1>*> vecBtn = { &m_minBtn,&m_maxBtn,&m_closeBtn };
+	vector<const char*> vecRes = { "picture:res\\close_24px.ico",
+		"picture:res\\max_24px.ico" ,"picture:res\\min_24px.ico" };
+	vector<int> vecCtrlID = { IDC_closeBtn, IDC_maxBtn, IDC_minBtn };
+	for (int i = 0; i < (int)vecBtn.size(); ++i) {
+		if (bs[i]) {
+			auto& sp = *vecBtn[i];
+			if (0 == sp) {
+				sp = make_shared<CMyButton1>();
+				sp->Create(0, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), this, vecCtrlID[i]);
+			}
+				
+			(*sp) & vecRes[i];
+		}
+	}
+
+	//HWND hWnd = GetDlgItem(IDC_UserName)->GetSafeHwnd();
+	//m_ctlUserName->Attach(hWnd);
+
+	vector<CString> vecName = { _T("mao"),_T("ljx") ,_T("liangzipeng") ,_T("果子卷") ,
+		_T("值班员233") };
+	m_ctlUserName->FillItem(vecName);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -224,6 +239,8 @@ void COwnDrawDlg::OnPaint()
 	//	CDialogEx::OnPaint();
 	//}
 
+	__super::OnPaint();
+
 	CPaintDC dc(this);
 	int x, y, w, h;
 	x = y = w = h = 0;
@@ -232,35 +249,15 @@ void COwnDrawDlg::OnPaint()
 	//自绘标题栏
 	CRect rc;
 	GetClientRect(&rc);
-	CRect rcTitle(0, 0, rc.right, theApp.m_nTitleHeight);
-	RectF rcGdi(0.0f, 0.0f, rcTitle.right*1.0f, rcTitle.bottom*1.0f);
-
-	Graphics gh(dc.GetSafeHdc());
-
-	SolidBrush br(theApp.m_clrTitle);
-	gh.FillRectangle(&br, rcGdi);
-	StringFormat strFormat;
-	auto& align = m_cfg["titleAlign"];
-	strFormat.SetLineAlignment(StringAlignmentCenter);
-	if ("center" == align)
-		strFormat.SetAlignment(StringAlignmentCenter);
-	else if("right" == align)
-		strFormat.SetAlignment(StringAlignmentFar);
-
-	SolidBrush brFont(theApp.m_clrFont);
-	gh.DrawString(m_strTitle, -1, theApp.m_pFontDefault, rcGdi, &strFormat, &brFont);
 
 	//最小最大关闭按钮，用Uxtheme不行，因为你先要有这个按钮，它是使用主题而不是画
 	const auto& btn = m_cfg["btn"];
-	std::bitset<3> bs(btn);
-	static vector<shared_ptr<CMyButton1>*> vecBtn = {
-		&m_minBtn,&m_maxBtn,&m_closeBtn 
-	};
+	bitset<3> bs(btn);
+	vector<shared_ptr<CMyButton1>*> vecBtn = { &m_minBtn,&m_maxBtn,&m_closeBtn };
 	w = theApp.m_nCloseBtnWidth;
 	for (auto i = 0; i < (int)vecBtn.size(); ++i) {
 		if (bs[i]) {//依此：关闭、最大、最小
-			(*vecBtn[i])->ShowWindow(SW_NORMAL);
-			x = rc.right - (3 - i) * (w) - theApp.m_nCloseBtnRightGap;
+			x = rc.right - (i + 1) * (w + 2) - theApp.m_nCloseBtnRightGap;
 			(*vecBtn[i])->SetWindowPos(0, x, 0, w, w, flag);
 		}
 	}
@@ -339,21 +336,22 @@ void COwnDrawDlg::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStr
 
 
 
-LRESULT COwnDrawDlg::OnNcHitTest(CPoint point)
+void COwnDrawDlg::OnBnClicked(UINT nID)
 {
-	CRect rc;
-	GetClientRect(&rc);
-	CRect rcTitle(0, 0, rc.right, theApp.m_nTitleHeight);
-
-	UINT nHitTest = __super::OnNcHitTest(point);
-	if (HTCLIENT == nHitTest) {
-		ScreenToClient(&point);
-		BOOL b = rcTitle.PtInRect(point);
-		if (b) { //在标题区
-			nHitTest = HTCAPTION;
-		}
+	/*
+	SC_CLOSE	关闭按钮
+	SC_MAXIMIZE	最大化按钮
+	SC_MINIMIZE	最小化按钮
+	SC_RESTORE	恢复按钮
+	*/
+	if (IDC_maxBtn == nID) {
+		static bool bRestore = false;
+		PostMessage(WM_SYSCOMMAND, bRestore ? SC_RESTORE : SC_MAXIMIZE);
+		bRestore = !bRestore;
+		Invalidate();
 	}
-	return nHitTest;
-
-	//return __super::OnNcHitTest(point);
+	if(IDC_minBtn == nID)
+		PostMessage(WM_SYSCOMMAND, SC_MINIMIZE);
+	if (IDC_closeBtn == nID)
+		PostMessage(WM_SYSCOMMAND, SC_CLOSE);
 }

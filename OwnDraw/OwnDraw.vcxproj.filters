@@ -60,6 +60,12 @@
     <ClInclude Include="MyButton1.h">
       <Filter>Control</Filter>
     </ClInclude>
+    <ClInclude Include="BaseDialog.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="MyCombo1.h">
+      <Filter>Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OwnDraw.cpp">
@@ -81,6 +87,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MyButton1.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseDialog.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="MyCombo1.cpp">
       <Filter>Control</Filter>
     </ClCompile>
   </ItemGroup>

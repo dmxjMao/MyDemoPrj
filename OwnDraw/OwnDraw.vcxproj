@@ -189,8 +189,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseDialog.h" />
     <ClInclude Include="CustomMenu.h" />
     <ClInclude Include="MyButton1.h" />
+    <ClInclude Include="MyCombo1.h" />
     <ClInclude Include="MyCommonDefine.h" />
     <ClInclude Include="OwnDraw.h" />
     <ClInclude Include="OwnDrawDlg.h" />
@@ -202,8 +204,10 @@
     <ClInclude Include="菜单笔记.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseDialog.cpp" />
     <ClCompile Include="CustomMenu.cpp" />
     <ClCompile Include="MyButton1.cpp" />
+    <ClCompile Include="MyCombo1.cpp" />
     <ClCompile Include="MyCommonDefine.cpp" />
     <ClCompile Include="OwnDraw.cpp" />
     <ClCompile Include="OwnDrawDlg.cpp" />

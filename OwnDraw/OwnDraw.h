@@ -36,11 +36,11 @@ private:
 
 public://程序级成员
 	const UINT8 m_nTitleHeight = 25;//标题栏高度
-	const Color m_clrTitle = Color(123, 123, 123);//标题栏颜色
+	const Color m_clrTitle = Color(72, 105, 245);//标题栏颜色
 	const Color m_clrFont = Color(Color::AntiqueWhite);//文字颜色
 	//const TCHAR* m_fontDefault = _T("宋体");//FontFamily和Font不能operator=，作全局也不行
 	Gdiplus::Font* m_pFontDefault;//默认字体
-	const UINT8 m_nCloseBtnRightGap = 10;//关闭按钮右边距
+	const UINT8 m_nCloseBtnRightGap = 0;//关闭按钮右边距
 	const UINT8 m_nCloseBtnWidth = 18;//关闭按钮宽度
 	const UINT8 m_nCloseBtnHoverWidth = 20;//鼠标悬浮宽度
 };
