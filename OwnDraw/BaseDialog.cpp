@@ -51,6 +51,13 @@ BOOL CBaseDialog::OnInitDialog()
 	//设置对话框样式：None
 	ModifyStyle(WS_OVERLAPPEDWINDOW, 0);
 
+	Graphics gh(GetDC()->GetSafeHdc());
+	//字体
+	LOGFONT lfont;
+	theApp.m_pFontDefault->GetLogFontW(&gh, &lfont);
+	m_font.CreateFontIndirect(&lfont);
+	SetFont(&m_font);
+
 	return TRUE;  
 }
 
@@ -105,4 +112,7 @@ void CBaseDialog::OnPaint()
 	gh.DrawString(m_strTitle, -1, theApp.m_pFontDefault, rcGdi, &strFormat, &brFont);
 
 
+	//PointF pf(250.0f, 30.0f);
+	////SolidBrush br(theApp.m_clrTitle);
+	//gh.DrawString(_T("你好，同志！welcome to shanghai!"), -1, theApp.m_pFontDefault, pf, &br);
 }

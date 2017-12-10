@@ -3,7 +3,7 @@
 
 // CMyCombo1
 
-class CMyCombo1 : public CComboBoxEx, public CUICfg
+class CMyCombo1 : public /*CComboBoxEx*/CComboBox, public CUICfg
 {
 	DECLARE_DYNAMIC(CMyCombo1)
 
@@ -15,9 +15,13 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()
+	BOOL m_bAutoComplete = TRUE;
+	CFont m_font;
 public:
 	afx_msg void OnPaint();
+	afx_msg void OnEditUpdate(); //×Ô¶¯²¹È«
 	virtual void PreSubclassWindow();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 

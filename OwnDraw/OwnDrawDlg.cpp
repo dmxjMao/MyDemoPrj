@@ -68,7 +68,6 @@ COwnDrawDlg::COwnDrawDlg(CWnd* pParent /*=NULL*/)
 	m_pMenuPop1 = new CMenu;
 	m_pMyMenu1 = new CMyMenu1;
 	
-	m_ctlUserName = make_shared<CMyCombo1>();
 
 	try {
 		//ui属性正则
@@ -102,7 +101,6 @@ COwnDrawDlg::~COwnDrawDlg()
 void COwnDrawDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_UserName, *m_ctlUserName);
 }
 
 BEGIN_MESSAGE_MAP(COwnDrawDlg, /*CDialogEx*/CBaseDialog)
@@ -165,6 +163,8 @@ BOOL COwnDrawDlg::OnInitDialog()
 	//m_pMyMenu1 = (CMyMenu1*)m_pMyMenu1->GetSubMenu(0);
 	//m_pMyMenu1->ChangeMenuItem(m_pMyMenu1);
 
+	//Graphics gh(GetDC()->GetSafeHdc());
+
 	CRect rc;
 	GetClientRect(&rc);
 
@@ -186,12 +186,18 @@ BOOL COwnDrawDlg::OnInitDialog()
 		}
 	}
 
-	//HWND hWnd = GetDlgItem(IDC_UserName)->GetSafeHwnd();
-	//m_ctlUserName->Attach(hWnd);
+	if (0 == m_ctlUserName) {
+		m_ctlUserName = make_shared<CMyCombo1>();
+		m_ctlUserName->Create(WS_CHILD | WS_VISIBLE | WS_TABSTOP, 
+			CRect(0, 0, 0, 0), this, IDC_UserName);
+	}
 
 	vector<CString> vecName = { _T("mao"),_T("ljx") ,_T("liangzipeng") ,_T("果子卷") ,
-		_T("值班员233") };
+		_T("值班员233"),_T("值班员甲"),_T("值班长杨好"),_T("主任奕"),
+		_T("值班员233"),_T("值班员23333333"),_T("没事了"),_T("最好的值班员") };
 	m_ctlUserName->FillItem(vecName);
+
+	//GetDlgItem(IDC_BUTTON1)->GetFocus();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -242,11 +248,15 @@ void COwnDrawDlg::OnPaint()
 	__super::OnPaint();
 
 	CPaintDC dc(this);
+	//CPaintDC dc((CBaseDialog*)this);
+	Graphics gh(dc.GetSafeHdc());
+	//HDC hdc = GetParent()->GetDC()->GetSafeHdc();
+	//Graphics gh(hdc);
+
 	int x, y, w, h;
 	x = y = w = h = 0;
 	DWORD flag = SWP_NOZORDER | SWP_NOACTIVATE;
 
-	//自绘标题栏
 	CRect rc;
 	GetClientRect(&rc);
 
@@ -261,7 +271,15 @@ void COwnDrawDlg::OnPaint()
 			(*vecBtn[i])->SetWindowPos(0, x, 0, w, w, flag);
 		}
 	}
+	
+	m_ctlUserName->SetWindowPos(0, 10, theApp.m_nTitleHeight + 10, 120, 1, flag);
 
+	//无法再输出文字了，在BaseDialog中可以，去掉__super::OnPaint也可以
+	//PointF pf(250.0f, 50.0f);
+	//SolidBrush br(theApp.m_clrTitle);
+	//gh.DrawString(_T("nihao"), -1, theApp.m_pFontDefault, pf, &br);
+
+	
 }
 
 // The system calls this function to obtain the cursor to display while the user drags

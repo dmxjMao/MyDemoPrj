@@ -3,7 +3,6 @@
 
 // CBaseDialog 对话框
 
-class CMyButton1;
 
 class CBaseDialog : public CDialogEx, public CUICfg
 {
@@ -26,6 +25,7 @@ protected:
 
 protected:
 	CString m_strTitle = _T("登录界面");
+	CFont m_font;
 
 public:
 	virtual BOOL OnInitDialog();

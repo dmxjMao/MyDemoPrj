@@ -7,6 +7,10 @@
 #include "BaseDialog.h"
 //#include "afxwin.h"
 
+/*遗留问题
+字体
+OnPaint父类输出了文字，子类输出不了文字
+*/
 class CMyMenu1;//自绘菜单
 class CMyButton1;//最小最大化关闭按钮
 class CMyCombo1;
@@ -28,6 +32,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	CFont m_font;
 	//CString m_strTitle = _T("天跃智能环境监测系统——登录界面");//标题
 	//std::shared_ptr<CMenu> m_pMenuPop1 = 0;
 	CMenu* m_pMenuPop1 = 0;
