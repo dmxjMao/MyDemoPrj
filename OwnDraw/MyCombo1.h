@@ -22,6 +22,7 @@ public:
 	afx_msg void OnEditUpdate(); //×Ô¶¯²¹È«
 	virtual void PreSubclassWindow();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 };
 
 

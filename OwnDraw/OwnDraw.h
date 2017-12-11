@@ -43,6 +43,9 @@ public://程序级成员
 	const UINT8 m_nCloseBtnRightGap = 0;//关闭按钮右边距
 	const UINT8 m_nCloseBtnWidth = 18;//关闭按钮宽度
 	const UINT8 m_nCloseBtnHoverWidth = 20;//鼠标悬浮宽度
+
+private:
+	void InitFont();//初始化字体
 };
 
 extern COwnDrawApp theApp;

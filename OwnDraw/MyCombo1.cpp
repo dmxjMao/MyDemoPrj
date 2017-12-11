@@ -44,12 +44,8 @@ END_MESSAGE_MAP()
 
 void CMyCombo1::FillItem(const std::vector<CString>& vecItem)
 {
-	//字体
-	Graphics gh(GetDC()->GetSafeHdc());
-	LOGFONT lfont;
-	theApp.m_pFontDefault->GetLogFontW(&gh, &lfont);
-	m_font.CreateFontIndirect(&lfont);
-	SetFont(&m_font);
+	//设置字体
+	Macro_SetFont; //放在OnCreate中最合理
 
 	const int nCnt = vecItem.size() > 10 ? 10 : (int)vecItem.size();
 
@@ -72,7 +68,7 @@ void CMyCombo1::OnPaint()
 
 void CMyCombo1::PreSubclassWindow()
 {
-	ModifyStyle(CBS_SORT, CBS_AUTOHSCROLL|CBS_DROPDOWN|CBS_HASSTRINGS);
+	ModifyStyle(CBS_SORT, CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS);
 	//EnableWindowTheme(m_hWnd, L"ComboBox", L"Explorer", 0);
 
 	__super::PreSubclassWindow();
@@ -119,4 +115,11 @@ void CMyCombo1::OnEditUpdate()
 		SetEditSel(dStart, dEnd);
 	else
 		SetEditSel(nLength, -1);
+}
+
+BOOL CMyCombo1::PreCreateWindow(CREATESTRUCT& cs)
+{
+	//Macro_SetFont;还没有dc
+
+	return __super::PreCreateWindow(cs);
 }

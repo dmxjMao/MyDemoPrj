@@ -55,10 +55,7 @@ BOOL COwnDrawApp::InitInstance()
 
 	//gdi+初始化
 	GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, NULL);
-	//默认字体
-	FontFamily ff(_T("微软雅黑"));
-	Gdiplus::Font font(&ff, 12, FontStyleRegular, UnitPixel);
-	m_pFontDefault = font.Clone(); //m_pFontDefault在析构会删除自己
+	InitFont();//初始化字体
 
 	AfxEnableControlContainer();
 
@@ -123,3 +120,15 @@ int COwnDrawApp::ExitInstance()
 
 	return CWinApp::ExitInstance();
 }
+
+
+
+void COwnDrawApp::InitFont()
+{
+	//默认字体
+	FontFamily ff(_T("微软雅黑"));
+	Gdiplus::Font font(&ff, 12, FontStyleRegular, UnitPixel);
+	m_pFontDefault = font.Clone(); //m_pFontDefault在析构会删除自己
+
+}
+

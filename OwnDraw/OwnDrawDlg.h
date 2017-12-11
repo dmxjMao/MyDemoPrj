@@ -14,6 +14,8 @@ OnPaint父类输出了文字，子类输出不了文字
 class CMyMenu1;//自绘菜单
 class CMyButton1;//最小最大化关闭按钮
 class CMyCombo1;
+class CMyEdit1;
+class CMyListCtrl1;
 
 // COwnDrawDlg dialog
 class COwnDrawDlg : /*public CDialogEx, */public CBaseDialog
@@ -61,4 +63,7 @@ protected:
 	std::shared_ptr<CMyButton1> m_maxBtn = 0;
 	std::shared_ptr<CMyButton1> m_closeBtn = 0;
 	std::shared_ptr<CMyCombo1> m_ctlUserName = 0;
+	std::shared_ptr<CMyEdit1> m_ctlPasswd = 0;
+	std::shared_ptr<CMyButton1> m_ctlBtn2 = 0;
+	std::shared_ptr<CMyListCtrl1> m_ctlList = 0;
 };

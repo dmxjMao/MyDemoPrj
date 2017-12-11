@@ -194,6 +194,8 @@
     <ClInclude Include="MyButton1.h" />
     <ClInclude Include="MyCombo1.h" />
     <ClInclude Include="MyCommonDefine.h" />
+    <ClInclude Include="MyEdit1.h" />
+    <ClInclude Include="MyListCtrl1.h" />
     <ClInclude Include="OwnDraw.h" />
     <ClInclude Include="OwnDrawDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -209,6 +211,8 @@
     <ClCompile Include="MyButton1.cpp" />
     <ClCompile Include="MyCombo1.cpp" />
     <ClCompile Include="MyCommonDefine.cpp" />
+    <ClCompile Include="MyEdit1.cpp" />
+    <ClCompile Include="MyListCtrl1.cpp" />
     <ClCompile Include="OwnDraw.cpp" />
     <ClCompile Include="OwnDrawDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

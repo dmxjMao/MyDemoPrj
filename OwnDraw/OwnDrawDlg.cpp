@@ -7,9 +7,12 @@
 #include "OwnDrawDlg.h"
 #include "afxdialogex.h"
 
+#include "MyCommonDefine.h"
 #include "CustomMenu.h"//自绘菜单
 #include "MyButton1.h"
 #include "MyCombo1.h"
+#include "MyEdit1.h"
+#include "MyListCtrl1.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -185,19 +188,62 @@ BOOL COwnDrawDlg::OnInitDialog()
 			(*sp) & vecRes[i];
 		}
 	}
-
+	//用户名
 	if (0 == m_ctlUserName) {
 		m_ctlUserName = make_shared<CMyCombo1>();
 		m_ctlUserName->Create(WS_CHILD | WS_VISIBLE | WS_TABSTOP, 
 			CRect(0, 0, 0, 0), this, IDC_UserName);
 	}
-
 	vector<CString> vecName = { _T("mao"),_T("ljx") ,_T("liangzipeng") ,_T("果子卷") ,
 		_T("值班员233"),_T("值班员甲"),_T("值班长杨好"),_T("主任奕"),
 		_T("值班员233"),_T("值班员23333333"),_T("没事了"),_T("最好的值班员") };
 	m_ctlUserName->FillItem(vecName);
 
 	//GetDlgItem(IDC_BUTTON1)->GetFocus();
+
+	//密码框
+	if (0 == m_ctlPasswd) {
+		m_ctlPasswd = make_shared<CMyEdit1>();
+		(*m_ctlPasswd) & "passwd:1";
+
+		m_ctlPasswd->Create(WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+			CRect(0, 0, 0, 0), this, IDC_Passwd);
+	}
+
+	//背景色+文字 按钮
+	if (0 == m_ctlBtn2) {
+		m_ctlBtn2 = make_shared<CMyButton1>();
+		(*m_ctlBtn2) & "type:2,bkgColor:#657CF2";
+
+		m_ctlBtn2->Create(0, WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+			CRect(0, 0, 0, 0), this, IDC_Btn2);
+		m_ctlBtn2->SetWindowText(_T("点我"));
+	}
+
+	//列表框
+	if (0 == m_ctlList) {
+		m_ctlList = make_shared<CMyListCtrl1>();
+		(*m_ctlList) & 
+			"head:设备编号,设备名称,IP地址,所属网点,在线状态,连续运行时间";
+
+		m_ctlList->Create(WS_CHILD | WS_VISIBLE,
+			CRect(0, 0, 0, 0), this, IDC_List);
+	}
+
+	for (int i = 0; i < 10; ++i) {
+		auto& sp = make_shared<stDeviceInfo>();
+		CString str;
+		str.Format(_T("%06d"), i);
+		sp->strCode = str;
+		str.Format(_T("设备%06d"), i);
+		sp->strName = str;
+		sp->strIP = _T("192.168.0.4");
+		sp->strWebsite = _T("宝山机械厂");
+		
+	}
+	vector<shared_ptr<stDeviceInfo>> vecItem;
+
+	//m_ctlList->FillItem();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -267,19 +313,28 @@ void COwnDrawDlg::OnPaint()
 	w = theApp.m_nCloseBtnWidth;
 	for (auto i = 0; i < (int)vecBtn.size(); ++i) {
 		if (bs[i]) {//依此：关闭、最大、最小
-			x = rc.right - (i + 1) * (w + 2) - theApp.m_nCloseBtnRightGap;
+			x = rc.right - (i + 1) * (w + 1) - theApp.m_nCloseBtnRightGap;
 			(*vecBtn[i])->SetWindowPos(0, x, 0, w, w, flag);
 		}
 	}
 	
-	m_ctlUserName->SetWindowPos(0, 10, theApp.m_nTitleHeight + 10, 120, 1, flag);
+	y = theApp.m_nTitleHeight + 10;
+	m_ctlUserName->SetWindowPos(0, 10, y, 120, 1, flag);
 
 	//无法再输出文字了，在BaseDialog中可以，去掉__super::OnPaint也可以
 	//PointF pf(250.0f, 50.0f);
 	//SolidBrush br(theApp.m_clrTitle);
 	//gh.DrawString(_T("nihao"), -1, theApp.m_pFontDefault, pf, &br);
 
-	
+	//与组合框内的edit有3px的距离
+	y += 30;
+	m_ctlPasswd->SetWindowPos(0, 13, y, 120, 20, flag);
+
+	y += 30;
+	m_ctlBtn2->SetWindowPos(0, 10, y, 40, 20, flag);
+
+	y += 30;
+	m_ctlList->SetWindowPos(0, 10, y, rc.Width() - 20, 300, flag);
 }
 
 // The system calls this function to obtain the cursor to display while the user drags
