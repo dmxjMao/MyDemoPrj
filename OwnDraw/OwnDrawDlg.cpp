@@ -71,6 +71,7 @@ COwnDrawDlg::COwnDrawDlg(CWnd* pParent /*=NULL*/)
 	m_pMenuPop1 = new CMenu;
 	m_pMyMenu1 = new CMyMenu1;
 	
+	m_ctlList = make_shared<CMyListCtrl1>();
 
 	try {
 		//ui属性正则
@@ -104,6 +105,8 @@ COwnDrawDlg::~COwnDrawDlg()
 void COwnDrawDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+
+	DDX_Control(pDX, IDC_LIST1, *m_ctlList);
 }
 
 BEGIN_MESSAGE_MAP(COwnDrawDlg, /*CDialogEx*/CBaseDialog)
@@ -116,6 +119,7 @@ BEGIN_MESSAGE_MAP(COwnDrawDlg, /*CDialogEx*/CBaseDialog)
 	ON_WM_DRAWITEM()
 	ON_WM_MEASUREITEM()
 	ON_COMMAND_RANGE(IDC_minBtn, IDC_closeBtn, &COwnDrawDlg::OnBnClicked)
+	ON_BN_CLICKED(IDC_BUTTON1, &COwnDrawDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -170,6 +174,7 @@ BOOL COwnDrawDlg::OnInitDialog()
 
 	CRect rc;
 	GetClientRect(&rc);
+	DWORD flag = SWP_NOZORDER | SWP_NOACTIVATE;
 
 	const auto& btn = m_cfg["btn"];
 	bitset<3> bs(btn);
@@ -221,29 +226,9 @@ BOOL COwnDrawDlg::OnInitDialog()
 	}
 
 	//列表框
-	if (0 == m_ctlList) {
-		m_ctlList = make_shared<CMyListCtrl1>();
-		(*m_ctlList) & 
-			"head:设备编号,设备名称,IP地址,所属网点,在线状态,连续运行时间";
 
-		m_ctlList->Create(WS_CHILD | WS_VISIBLE,
-			CRect(0, 0, 0, 0), this, IDC_List);
-	}
-
-	for (int i = 0; i < 10; ++i) {
-		auto& sp = make_shared<stDeviceInfo>();
-		CString str;
-		str.Format(_T("%06d"), i);
-		sp->strCode = str;
-		str.Format(_T("设备%06d"), i);
-		sp->strName = str;
-		sp->strIP = _T("192.168.0.4");
-		sp->strWebsite = _T("宝山机械厂");
-		
-	}
-	vector<shared_ptr<stDeviceInfo>> vecItem;
-
-	//m_ctlList->FillItem();
+	m_ctlList->SetWindowPos(0, 10, 50, rc.right - 20, rc.bottom - 20, flag);
+	m_ctlList->LoadData();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -365,7 +350,7 @@ void COwnDrawDlg::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 {
 	//屏幕坐标
 	//m_pMenuPop1->TrackPopupMenu(TPM_LEFTALIGN, point.x, point.y, this);
-	m_pMyMenu1->TrackPopupMenu(TPM_LEFTBUTTON | TPM_LEFTALIGN, point.x, point.y, this);
+	//m_pMyMenu1->TrackPopupMenu(TPM_LEFTBUTTON | TPM_LEFTALIGN, point.x, point.y, this);
 
 	//CMenu add;
 	//add.CreatePopupMenu();
@@ -427,4 +412,9 @@ void COwnDrawDlg::OnBnClicked(UINT nID)
 		PostMessage(WM_SYSCOMMAND, SC_MINIMIZE);
 	if (IDC_closeBtn == nID)
 		PostMessage(WM_SYSCOMMAND, SC_CLOSE);
+}
+
+void COwnDrawDlg::OnBnClickedButton1()
+{
+	
 }

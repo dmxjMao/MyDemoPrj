@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A004C7F9-C087-4C13-8507-CC81D0F3B6AC}</ProjectGuid>
-    <RootNamespace>OwnDraw</RootNamespace>
+    <ProjectGuid>{8A0AFBAA-FB30-446F-8CDA-1DFDAC98ACB4}</ProjectGuid>
+    <RootNamespace>algorithm</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
@@ -91,14 +91,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\boost_1_63_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\boost_1_63_0\stage\lib</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -106,7 +101,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
-      <Culture>0x0409</Culture>
+      <Culture>0x0804</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
@@ -117,7 +112,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +122,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
-      <Culture>0x0409</Culture>
+      <Culture>0x0804</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
@@ -141,7 +135,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,7 +147,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
-      <Culture>0x0409</Culture>
+      <Culture>0x0804</Culture>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
@@ -167,7 +160,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,7 +172,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
-      <Culture>0x0409</Culture>
+      <Culture>0x0804</Culture>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
@@ -189,56 +181,37 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseDialog.h" />
-    <ClInclude Include="CustomMenu.h" />
-    <ClInclude Include="ListCtrl_DataModel.h" />
-    <ClInclude Include="MyButton1.h" />
-    <ClInclude Include="MyCombo1.h" />
-    <ClInclude Include="MyCommonDefine.h" />
-    <ClInclude Include="MyEdit1.h" />
-    <ClInclude Include="MyListCtrl1.h" />
-    <ClInclude Include="OwnDraw.h" />
-    <ClInclude Include="OwnDrawDlg.h" />
+    <ClInclude Include="algorithm.h" />
+    <ClInclude Include="algorithmDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="UICfg.h" />
-    <ClInclude Include="快捷键.h" />
-    <ClInclude Include="菜单笔记.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseDialog.cpp" />
-    <ClCompile Include="CustomMenu.cpp" />
-    <ClCompile Include="MyButton1.cpp" />
-    <ClCompile Include="MyCombo1.cpp" />
-    <ClCompile Include="MyCommonDefine.cpp" />
-    <ClCompile Include="MyEdit1.cpp" />
-    <ClCompile Include="MyListCtrl1.cpp" />
-    <ClCompile Include="OwnDraw.cpp" />
-    <ClCompile Include="OwnDrawDlg.cpp" />
+    <ClCompile Include="algorithm.cpp" />
+    <ClCompile Include="algorithmDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UICfg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="OwnDraw.rc" />
+    <ResourceCompile Include="algorithm.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\OwnDraw.rc2" />
+    <None Include="res\algorithm.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\OwnDraw.ico" />
+    <Image Include="res\algorithm.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties RESOURCE_FILE="OwnDraw.rc" />
+      <UserProperties RESOURCE_FILE="algorithm.rc" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

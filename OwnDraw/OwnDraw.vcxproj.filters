@@ -72,6 +72,9 @@
     <ClInclude Include="MyListCtrl1.h">
       <Filter>Control</Filter>
     </ClInclude>
+    <ClInclude Include="ListCtrl_DataModel.h">
+      <Filter>Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OwnDraw.cpp">

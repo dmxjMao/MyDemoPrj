@@ -5,6 +5,7 @@
 #pragma once
 //#include "UICfg.h" //ui≈‰÷√
 #include "BaseDialog.h"
+//#include "afxcmn.h"
 //#include "afxwin.h"
 
 /*“≈¡ÙŒ Ã‚
@@ -66,4 +67,7 @@ protected:
 	std::shared_ptr<CMyEdit1> m_ctlPasswd = 0;
 	std::shared_ptr<CMyButton1> m_ctlBtn2 = 0;
 	std::shared_ptr<CMyListCtrl1> m_ctlList = 0;
+public:
+	afx_msg void OnBnClickedButton1();
+
 };
