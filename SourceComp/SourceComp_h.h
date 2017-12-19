@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 8.00.0603 */
-/* at Sat Dec 16 15:13:22 2017
+/* at Tue Dec 19 21:33:49 2017
  */
 /* Compiler settings for SourceComp.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0603 
@@ -65,6 +65,13 @@ typedef struct SourceObj SourceObj;
 #endif /* __cplusplus */
 
 #endif 	/* __SourceObj_FWD_DEFINED__ */
+
+
+#ifndef __IAbc_FWD_DEFINED__
+#define __IAbc_FWD_DEFINED__
+typedef interface IAbc IAbc;
+
+#endif 	/* __IAbc_FWD_DEFINED__ */
 
 
 #ifdef __cplusplus
@@ -319,6 +326,121 @@ EXTERN_C const CLSID CLSID_SourceObj;
 class DECLSPEC_UUID("040017F7-DE9C-4A16-9A7A-778845B62DB4")
 SourceObj;
 #endif
+
+#ifndef __IAbc_DISPINTERFACE_DEFINED__
+#define __IAbc_DISPINTERFACE_DEFINED__
+
+/* dispinterface IAbc */
+/* [uuid] */ 
+
+
+EXTERN_C const IID DIID_IAbc;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+
+    MIDL_INTERFACE("1CDE9317-E966-47F0-A173-AF125CCE206D")
+    IAbc : public IDispatch
+    {
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IAbcVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IAbc * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IAbc * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IAbc * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IAbc * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IAbc * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IAbc * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IAbc * This,
+            /* [annotation][in] */ 
+            _In_  DISPID dispIdMember,
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][in] */ 
+            _In_  LCID lcid,
+            /* [annotation][in] */ 
+            _In_  WORD wFlags,
+            /* [annotation][out][in] */ 
+            _In_  DISPPARAMS *pDispParams,
+            /* [annotation][out] */ 
+            _Out_opt_  VARIANT *pVarResult,
+            /* [annotation][out] */ 
+            _Out_opt_  EXCEPINFO *pExcepInfo,
+            /* [annotation][out] */ 
+            _Out_opt_  UINT *puArgErr);
+        
+        END_INTERFACE
+    } IAbcVtbl;
+
+    interface IAbc
+    {
+        CONST_VTBL struct IAbcVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IAbc_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IAbc_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IAbc_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IAbc_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IAbc_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IAbc_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IAbc_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+#endif 	/* __IAbc_DISPINTERFACE_DEFINED__ */
+
 #endif /* __SourceComp_LIBRARY_DEFINED__ */
 
 /* Additional Prototypes for ALL interfaces */

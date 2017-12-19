@@ -35,4 +35,5 @@ library SourceComp
 		[default] dispinterface ISourceObj;
 		[default, source] dispinterface IEventSet;
 	};
+
 };

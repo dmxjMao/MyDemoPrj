@@ -18,18 +18,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SourceComp.cpp">
+    <ClCompile Include="MFCSample.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SourceObj.cpp">
+    <ClCompile Include="Account.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SourceComp.h">
+    <ClInclude Include="MFCSample.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -41,26 +41,25 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SourceObj.h">
+    <ClInclude Include="Account.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SourceComp.def">
+    <None Include="MFCSample.def">
       <Filter>源文件</Filter>
     </None>
-    <None Include="res\SourceComp.rc2">
+    <None Include="res\MFCSample.rc2">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="SourceComp.idl">
+    <Midl Include="MFCSample.idl">
       <Filter>源文件</Filter>
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SourceComp.rc">
+    <ResourceCompile Include="MFCSample.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
