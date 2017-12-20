@@ -34,6 +34,7 @@ public:
 // 实现
 protected:
 	HICON m_hIcon;
+	IAccountPtr m_account = 0;
 
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
@@ -52,4 +53,10 @@ public:
 
 private:
 	long m_Property;
+public:
+	afx_msg void OnClose();
+protected:
+	long m_nBalance;
+public:
+	afx_msg void OnBnClickedButton4();
 };

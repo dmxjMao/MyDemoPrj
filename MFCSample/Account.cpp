@@ -47,7 +47,8 @@ END_MESSAGE_MAP()
 
 
 BEGIN_DISPATCH_MAP(CAccount, CCmdTarget)
-	DISP_PROPERTY_EX(CAccount, "balance", GetBalance, SetBalance, VT_I4)
+	DISP_PROPERTY_EX(CAccount, "Balance", GetBalance, SetBalance, VT_I4)
+	DISP_FUNCTION(CAccount, "Post", Post2, VT_I4, VTS_I4/* VTS_PBSTR*/)
 END_DISPATCH_MAP()
 
 // 注意: 我们添加 IID_IAccount 支持
@@ -72,7 +73,7 @@ IMPLEMENT_OLECREATE_FLAGS(CAccount, "MFCSample.Account", afxRegApartmentThreadin
 //long CAccount::GetBalance();
 //void CAccount::SetBalance(long);
 
-void CAccount::Post(long lAmount, LPBSTR pResult)
+HRESULT CAccount::Post2(long lAmount/*, LPBSTR pResult*/)
 {
 	TCHAR szBuffer[512] = { 0 };
 	if (m_nBalance + lAmount < 0) {
@@ -86,5 +87,6 @@ void CAccount::Post(long lAmount, LPBSTR pResult)
 			_T("您刚(%s)了%ld金币,现在剩余：%ld"),
 			lAmount ? _T("存入") : _T("消费"), lAmount, m_nBalance);
 	}
-	*pResult = T2BSTR(szBuffer);
+	//*pResult = T2BSTR(szBuffer);
+	return S_OK;
 }

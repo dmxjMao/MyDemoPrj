@@ -26,7 +26,7 @@ protected:
 private:
 	long m_nBalance;
 public:
-	void Post(long lAmount, LPBSTR pResult);
+	HRESULT Post2(long lAmount/*, LPBSTR pResult*/);
 };
 
 

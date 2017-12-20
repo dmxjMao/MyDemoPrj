@@ -14,9 +14,9 @@ library MFCSample
 	dispinterface IAccount
 	{
 		properties:
-			[id(0)] long balance;
+			[id(0)] long Balance;
 		methods:
-			[id(1)] void Post(long nAmount,LPBSTR pResult);
+			[id(1)] HRESULT Post(long nAmount/*,LPBSTR pResult*/);
 	};
 
 	//  Account 的类信息

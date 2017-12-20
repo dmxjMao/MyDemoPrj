@@ -22,6 +22,7 @@ static const GUID IID_IEventSet =
 CMFCDialogDlg::CMFCDialogDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_MFCDIALOG_DIALOG, pParent)
 	, m_Property(0)
+	, m_nBalance(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -31,6 +32,7 @@ void CMFCDialogDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	//  DDX_Control(pDX, IDC_EDIT1, m_edit);
 	DDX_Text(pDX, IDC_EDIT1, m_Property);
+	DDX_Text(pDX, IDC_EDIT2, m_nBalance);
 }
 
 BEGIN_MESSAGE_MAP(CMFCDialogDlg, CDialogEx)
@@ -39,6 +41,8 @@ BEGIN_MESSAGE_MAP(CMFCDialogDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFCDialogDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMFCDialogDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMFCDialogDlg::OnBnClickedButton3)
+	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_BUTTON4, &CMFCDialogDlg::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -53,14 +57,20 @@ BOOL CMFCDialogDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	GUID guid;
+	//#import使用代码组件
+	if (FAILED(m_account.CreateInstance(__uuidof(Account)))) {
+		return FALSE;
+	}
+
+	//可连接对象
+	/*GUID guid;
 	HRESULT hr = ::CLSIDFromProgID(L"SourceComp.SourceObj", &guid);
 	if (FAILED(hr))
 		return FALSE;
 
 	hr = CoCreateInstance(guid, 0, CLSCTX_INPROC_SERVER, IID_IDispatch, (LPVOID*)&m_pDispatch);
 	if (FAILED(hr))
-		return FALSE;
+		return FALSE;*/
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -233,4 +243,25 @@ void CMFCDialogDlg::OnBnClickedButton3()
 	END_TRY
 		
 	driver.DetachDispatch();
+}
+
+
+void CMFCDialogDlg::OnClose()
+{
+	m_account.Release();
+
+	CDialogEx::OnClose();
+}
+
+
+void CMFCDialogDlg::OnBnClickedButton4()
+{
+	UpdateData();
+
+	CString str;
+	BSTR bstr = str.AllocSysString();
+
+	HRESULT hr = m_account->Post(m_nBalance);
+	AfxMessageBox(bstr);
+	::SysFreeString(bstr);
 }

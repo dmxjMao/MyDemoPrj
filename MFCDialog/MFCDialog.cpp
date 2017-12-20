@@ -11,6 +11,7 @@
 #endif
 
 
+
 // CMFCDialogApp
 
 BEGIN_MESSAGE_MAP(CMFCDialogApp, CWinApp)

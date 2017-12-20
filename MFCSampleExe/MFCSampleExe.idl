@@ -1,0 +1,29 @@
+// MFCSampleExe.idl : MFCSampleExe.exe 的类型库源
+
+// 此文件将由 MIDL 编译器处理以产生
+// 类型库(MFCSampleExe.tlb)。
+
+#include "olectl.h"
+[ uuid(6A6E89E4-7A01-4106-9023-1BEA8E34DD38), version(1.0) ]
+library MFCSampleExe
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+	
+	//  AccountExe 的主调度接口
+		
+	[ uuid(862B69E7-2BC6-4123-8906-E69DEAEF330A) ]
+	dispinterface IAccountExe
+	{
+		properties:
+		methods:
+	};
+
+	//  AccountExe 的类信息
+
+	[ uuid(34494B3D-BD25-4BF3-8C10-4C795B2E1402) ]
+	coclass AccountExe
+	{
+		[default] dispinterface IAccountExe;
+	};
+};
