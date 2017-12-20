@@ -13,12 +13,14 @@ public:
 	CMyListCtrl1();
 	virtual ~CMyListCtrl1();
 	
+	void LoadData();
+
 	//void FillItem(const std::vector<std::shared_ptr<stDeviceInfo>>& );
 	void SetSortArrow(int col, bool ascending);//设置箭头
 	inline bool IsAscending() const { return m_bAscending; }
 	int GetColumnData(int col) const;//排序的自定义数据
-	bool SortColumn(int columnIndex, bool ascending);//排序
-	void LoadData();
+	bool SortColumn(int columnIndex, bool ascending);//排序列
+	BOOL ShowColumn(int nCol, bool bShow);//显示列
 	
 	BOOL GroupByColumn(int nCol);//按列分组
 	LRESULT InsertGroupHeader(int nIndex, int nGroupID, 
@@ -38,9 +40,12 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 	virtual void PreSubclassWindow();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	afx_msg BOOL OnHeaderClick(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg BOOL OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg LRESULT OnInsertColumn(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnDeleteColumn(WPARAM wParam, LPARAM lParam);
 	void AdjustColumnWidth();
 
 private:
@@ -48,6 +53,7 @@ private:
 	bool m_bAscending = false; //是否升序
 	int m_nSortCol = -1;//排序的列
 	std::shared_ptr<CListCtrl_DataModel> m_pDataModel = 0;//数据
+	
 };
 
 

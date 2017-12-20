@@ -1,0 +1,39 @@
+// SourceComp.idl : SourceComp.dll 的类型库源
+// 此文件将由 MIDL 编译器处理以产生
+// 类型库(SourceComp.tlb)。
+
+#include "olectl.h"
+[ uuid(1F05BC2B-36A2-47FC-B2BF-114E4FA6A280), version(1.0) ]
+library SourceComp
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+	//  SourceObj 的主调度接口
+		
+	[ uuid(00ACF9CC-E760-4204-92B7-C98A76D5D151) ]
+	dispinterface ISourceObj
+	{
+		properties:
+			[id(1)] long MyProperty;
+		methods:
+	};
+
+	//自定义出接口
+	[ uuid(91C334E2-2C94-4AA6-8BC8-C08818680314) ]
+	dispinterface IEventSet
+	{
+		properties:
+		methods:
+			[id(0)] void PropChanged(long nInt);//激发通知接收器
+	};
+
+	//  SourceObj 的类信息
+
+	[ uuid(040017F7-DE9C-4A16-9A7A-778845B62DB4) ]
+	coclass SourceObj
+	{
+		[default] dispinterface ISourceObj;
+		[default, source] dispinterface IEventSet;
+	};
+
+};

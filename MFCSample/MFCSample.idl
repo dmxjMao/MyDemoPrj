@@ -1,0 +1,29 @@
+// MFCSample.idl : MFCSample.dll 的类型库源
+// 此文件将由 MIDL 编译器处理以产生
+// 类型库(MFCSample.tlb)。
+
+#include "olectl.h"
+[ uuid(B2D0966D-43DE-4A61-9886-85CD8EB6D4A1), version(1.0) ]
+library MFCSample
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+	//  Account 的主调度接口
+		
+	[ uuid(CC6316FE-8AFE-46D9-8005-42EC04C460FA) ]
+	dispinterface IAccount
+	{
+		properties:
+			[id(0)] long balance;
+		methods:
+			[id(1)] void Post(long nAmount,LPBSTR pResult);
+	};
+
+	//  Account 的类信息
+
+	[ uuid(E0E30A65-2E23-4879-85A4-4B0FB1EF5919) ]
+	coclass Account
+	{
+		[default] dispinterface IAccount;
+	};
+};

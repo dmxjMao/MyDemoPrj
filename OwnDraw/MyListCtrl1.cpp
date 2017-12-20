@@ -118,6 +118,8 @@ BEGIN_MESSAGE_MAP(CMyListCtrl1, CListCtrl)
 	ON_NOTIFY_REFLECT_EX(LVN_COLUMNCLICK, OnHeaderClick)
 	ON_WM_CONTEXTMENU()
 	ON_NOTIFY_REFLECT_EX(LVN_GETDISPINFO, OnGetDispInfo)	// Text Callback
+	ON_MESSAGE(LVM_INSERTCOLUMN, OnInsertColumn)
+	ON_MESSAGE(LVM_DELETECOLUMN, OnDeleteColumn)
 END_MESSAGE_MAP()
 
 
@@ -184,26 +186,34 @@ void CMyListCtrl1::OnContextMenu(CWnd* pWnd, CPoint point)
 		if (hdhti.iItem != -1) //点击了表头
 		{
 			// 获取表头标题
-			LVCOLUMN lvc = { 0 };
-			lvc.mask = LVCF_TEXT;
-			TCHAR sColText[256];
-			lvc.pszText = sColText;
-			lvc.cchTextMax = sizeof(sColText) - 1;
-			VERIFY(GetColumn(hdhti.iItem, &lvc));
+			CString strTitle = m_pDataModel->GetColTitle(hdhti.iItem);
 
 			//动态创建菜单
 			CMenu menu;
 			UINT uFlags = MF_BYPOSITION | MF_STRING;
 			VERIFY(menu.CreatePopupMenu());
-			menu.InsertMenu(0, uFlags, 1, CString(_T("Group by: ")) + lvc.pszText);
+			menu.InsertMenu(0, uFlags, 1, CString(_T("Group by: ")) + strTitle);
 			if (IsGroupViewEnabled())
 				menu.InsertMenu(0, uFlags, 2, _T("Disable Grouping"));
-			int nResult = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD, point.x, point.y, this, 0);
-			switch (nResult)
-			{
-			case 1:	GroupByColumn(hdhti.iItem); break;
-			case 2: RemoveAllGroups(); EnableGroupView(FALSE); break;
+			for (int i = m_vecVisible.size() - 1; i >= 0; --i) {
+				uFlags = MF_BYPOSITION | MF_STRING;
+				if (m_vecVisible[i])
+					uFlags |= MF_CHECKED;		
+				else
+					uFlags |= MF_UNCHECKED;
+
+				CString strTitle = m_pDataModel->GetColTitle(i);
+
+				menu.InsertMenu(0, uFlags, i + 3, strTitle);
 			}
+
+			//TPM_RETURNCMD nResult是点击的菜单 不会走OnCommand
+			/*int nResult = */menu.TrackPopupMenu(TPM_LEFTALIGN/* | TPM_RETURNCMD*/, point.x, point.y, this, 0);
+			//switch (nResult) //如果放开就不走OnCommand
+			//{
+			//case 1:	GroupByColumn(hdhti.iItem); break;
+			//case 2: RemoveAllGroups(); EnableGroupView(FALSE); break;
+			//}
 		}
 		return;
 	}
@@ -336,7 +346,32 @@ bool CMyListCtrl1::SortColumn(int nCol, bool ascending)
 }
 
 
+BOOL CMyListCtrl1::ShowColumn(int nCol, bool bShow)
+{
+	SetRedraw(FALSE);
 
+	if (bShow)
+	{
+		SetExtendedStyle(GetExtendedStyle() | LVS_EX_COLUMNSNAPPOINTS);
+
+		SetColumnWidth(nCol, 1);
+		m_vecVisible[nCol] = true;
+		AdjustColumnWidth();
+	}
+	else //隐藏列
+	{
+		SetExtendedStyle(GetExtendedStyle()&~LVS_EX_COLUMNSNAPPOINTS);
+
+		m_vecVisible[nCol] = false;
+		SetColumnWidth(nCol, 0);
+
+		SetExtendedStyle(GetExtendedStyle() | LVS_EX_COLUMNSNAPPOINTS);
+	}
+
+	SetRedraw(TRUE);
+	Invalidate(FALSE);
+	return TRUE;
+}
 
 
 void CMyListCtrl1::LoadData()
@@ -698,5 +733,57 @@ BOOL CMyListCtrl1::SetGroupState(int nGroupId, DWORD dwState)
 	if (SetGroupInfo(nGroupId, (PLVGROUP)&lg) == -1)
 		return FALSE;
 
+	return TRUE;
+}
+
+
+LRESULT CMyListCtrl1::OnInsertColumn(WPARAM wParam, LPARAM lParam)
+{
+	// Let the CListCtrl handle the event
+	LRESULT lRet = DefWindowProc(LVM_INSERTCOLUMN, wParam, lParam);
+	if (lRet == -1)
+		return -1;
+
+	int nCol = (int)lRet;
+
+	// Book keeping of columns
+	if ((int)m_vecVisible.size() < GetHeaderCtrl()->GetItemCount())
+		m_vecVisible.push_back(true);	// Insert as visible
+
+	return lRet;
+}
+
+LRESULT CMyListCtrl1::OnDeleteColumn(WPARAM wParam, LPARAM lParam)
+{
+	// Let the CListCtrl handle the event
+	LRESULT lRet = DefWindowProc(LVM_DELETECOLUMN, wParam, lParam);
+	if (lRet == FALSE)
+		return FALSE;
+
+	// Book keeping of columns
+	int nCol = (int)wParam;
+	if(nCol < (int)m_vecVisible.size())
+		m_vecVisible[nCol] = false;
+
+	return lRet;
+}
+
+BOOL CMyListCtrl1::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	if (HIWORD(wParam) == 0) //菜单
+	{
+		int id = LOWORD(wParam); //菜单id：OnContextMenu
+		switch (id)
+		{
+		case 1:	GroupByColumn(id); break;
+		case 2: RemoveAllGroups(); EnableGroupView(FALSE); break;
+		default: {//显示列
+			int nCol = id - 3;
+			ShowColumn(nCol, !m_vecVisible[nCol]);
+			break;
+		}
+		}
+		
+	}
 	return TRUE;
 }
