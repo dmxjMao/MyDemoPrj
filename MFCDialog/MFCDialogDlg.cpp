@@ -258,10 +258,10 @@ void CMFCDialogDlg::OnBnClickedButton4()
 {
 	UpdateData();
 
-	CString str;
-	BSTR bstr = str.AllocSysString();
+	//CString str;
+	//BSTR bstr = str.AllocSysString();
 
-	HRESULT hr = m_account->Post(m_nBalance);
+	_bstr_t bstr = m_account->Post(m_nBalance);
 	AfxMessageBox(bstr);
-	::SysFreeString(bstr);
+	//::SysFreeString(bstr);
 }

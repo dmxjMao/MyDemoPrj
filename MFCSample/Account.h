@@ -14,8 +14,8 @@ public:
 
 	virtual void OnFinalRelease();
 
-	inline afx_msg long GetBalance() { return m_nBalance; }
-	inline afx_msg void SetBalance(long l) { m_nBalance = l; }
+	//inline afx_msg long GetBalance() { return m_nBalance; }
+	//inline afx_msg void SetBalance(long l) { m_nBalance = l; }
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -24,9 +24,19 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 private:
-	long m_nBalance;
+	long m_balance;
 public:
-	HRESULT Post2(long lAmount/*, LPBSTR pResult*/);
+	//HRESULT Post2(long lAmount/*, LPBSTR pResult*/);
+protected:
+	LONG GetBalance();
+	void SetBalance(LONG newVal);
+
+	enum
+	{
+		dispidPost = 2L,
+		dispidBalance = 1
+	};
+	BSTR Post(LONG lAmount);
 };
 
 

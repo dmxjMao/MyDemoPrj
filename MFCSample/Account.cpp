@@ -12,7 +12,7 @@ IMPLEMENT_DYNCREATE(CAccount, CCmdTarget)
 
 
 CAccount::CAccount()
-	: m_nBalance(0)
+	: m_balance(0)
 {
 	EnableAutomation();
 	
@@ -47,8 +47,10 @@ END_MESSAGE_MAP()
 
 
 BEGIN_DISPATCH_MAP(CAccount, CCmdTarget)
-	DISP_PROPERTY_EX(CAccount, "Balance", GetBalance, SetBalance, VT_I4)
-	DISP_FUNCTION(CAccount, "Post", Post2, VT_I4, VTS_I4/* VTS_PBSTR*/)
+	//DISP_PROPERTY_EX(CAccount, "Balance", GetBalance, SetBalance, VT_I4)
+	//DISP_FUNCTION(CAccount, "Post", Post2, VT_I4, VTS_I4/* VTS_PBSTR*/)
+	DISP_PROPERTY_EX_ID(CAccount, "Balance", dispidBalance, GetBalance, SetBalance, VT_I4)
+	DISP_FUNCTION_ID(CAccount, "Post", dispidPost, Post, VT_BSTR, VTS_I4)
 END_DISPATCH_MAP()
 
 // 注意: 我们添加 IID_IAccount 支持
@@ -72,21 +74,59 @@ IMPLEMENT_OLECREATE_FLAGS(CAccount, "MFCSample.Account", afxRegApartmentThreadin
 
 //long CAccount::GetBalance();
 //void CAccount::SetBalance(long);
+//
+//HRESULT CAccount::Post2(long lAmount/*, LPBSTR pResult*/)
+//{
+//	TCHAR szBuffer[512] = { 0 };
+//	if (m_nBalance + lAmount < 0) {
+//		_stprintf_s(szBuffer, 512,
+//			_T("Error Balance(%ld) can't be overdrawn by %ld"),
+//			m_nBalance, lAmount);
+//	}
+//	else {
+//		m_nBalance += lAmount;
+//		_stprintf_s(szBuffer, 512,
+//			_T("您刚(%s)了%ld金币,现在剩余：%ld"),
+//			lAmount ? _T("存入") : _T("消费"), lAmount, m_nBalance);
+//	}
+//	//*pResult = T2BSTR(szBuffer);
+//	return S_OK;
+//}
 
-HRESULT CAccount::Post2(long lAmount/*, LPBSTR pResult*/)
+
+LONG CAccount::GetBalance()
 {
-	TCHAR szBuffer[512] = { 0 };
-	if (m_nBalance + lAmount < 0) {
-		_stprintf_s(szBuffer, 512,
+	//就是没有加这句，所以调用不成功
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	return m_balance;
+}
+
+
+void CAccount::SetBalance(LONG newVal)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
+	m_balance = newVal;
+}
+
+
+BSTR CAccount::Post(LONG lAmount)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
+	CString strResult;
+
+	if (m_balance + lAmount < 0) {
+		strResult.Format(
 			_T("Error Balance(%ld) can't be overdrawn by %ld"),
-			m_nBalance, lAmount);
+			m_balance, lAmount);
 	}
 	else {
-		m_nBalance += lAmount;
-		_stprintf_s(szBuffer, 512,
+		m_balance += lAmount;
+		strResult.Format(
 			_T("您刚(%s)了%ld金币,现在剩余：%ld"),
-			lAmount ? _T("存入") : _T("消费"), lAmount, m_nBalance);
+			lAmount ? _T("存入") : _T("消费"), lAmount, m_balance);
 	}
-	//*pResult = T2BSTR(szBuffer);
-	return S_OK;
+
+	return strResult.AllocSysString();
 }

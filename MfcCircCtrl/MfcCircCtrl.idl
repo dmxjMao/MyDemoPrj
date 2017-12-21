@@ -1,0 +1,57 @@
+// MfcCircCtrl.idl : ActiveX 控件项目的类型库源。
+
+// 此文件将由 MIDL 编译器工具处理以
+// 产生类型库(MfcCircCtrl.tlb)，该类型库将成为
+// MfcCircCtrl.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[ uuid(86FCAD0D-ED68-4052-A1A8-375D2738D2D3), version(1.0),
+  control ]
+library MfcCircCtrlLib
+{
+	importlib(STDOLE_TLB);
+
+	//  CMfcCircCtrlCtrl 的主调度接口
+	[ 
+		uuid(AAC8F54A-B68F-49D9-ADD7-0B85911C6DD5)	
+	]
+	dispinterface _DMfcCircCtrl
+	{
+		properties:
+			[id(DISPID_BACKCOLOR), bindable, requestedit] OLE_COLOR BackColor;
+			[id(DISPID_CAPTION)] BSTR Caption;
+			[id(DISPID_FONT)] IFontDisp*Font;
+			[id(DISPID_FORECOLOR)] OLE_COLOR ForeColor;
+			[id(1)] VARIANT_BOOL CircleShaple;
+			[id(2)] SHORT CircleOffset;
+	methods:
+	};
+
+	//  CMfcCircCtrlCtrl 的事件调度接口
+
+	[ 
+		uuid(965D2AA7-4EE0-4D3F-B70A-D83BAA354B00)	
+	]
+	dispinterface _DMfcCircCtrlEvents
+	{
+		properties:
+			//  事件接口没有任何属性
+
+		methods:
+			[id(1)] void ClickIn(OLE_XPOS_PIXELS x, OLE_YPOS_PIXELS y);
+			[id(2)] void ClickOut(OLE_XPOS_PIXELS x, OLE_YPOS_PIXELS y);
+	};
+
+	//  CMfcCircCtrlCtrl 的类信息
+	[
+		uuid(26A29B83-9263-47B4-B6EE-1261BB10FA40)
+	]
+	coclass MfcCircCtrl
+	{
+		[default] dispinterface _DMfcCircCtrl;
+		[default, source] dispinterface _DMfcCircCtrlEvents;
+	};
+
+};
