@@ -133,85 +133,30 @@ END_MSG_MAP()
 
 // IBullsEye
 public:
-	HRESULT OnDraw(ATL_DRAWINFO& di)
-	{
-		RECT& rc = *(RECT*)di.prcBounds;
-		// 将剪辑区域设置为 di.prcBounds 指定的矩形
-		HRGN hRgnOld = NULL;
-		if (GetClipRgn(di.hdcDraw, hRgnOld) != 1)
-			hRgnOld = NULL;
-		bool bSelectOldRgn = false;
+	HRESULT OnDraw(ATL_DRAWINFO& di);
+	void DrawBullsEye(ATL_DRAWINFO& di);
 
-		HRGN hRgnNew = CreateRectRgn(rc.left, rc.top, rc.right, rc.bottom);
-
-		if (hRgnNew != NULL)
-		{
-			bSelectOldRgn = (SelectClipRgn(di.hdcDraw, hRgnNew) != ERROR);
-		}
-
-		Rectangle(di.hdcDraw, rc.left, rc.top, rc.right, rc.bottom);
-		SetTextAlign(di.hdcDraw, TA_CENTER|TA_BASELINE);
-		LPCTSTR pszText = _T("BullsEye");
-#ifndef _WIN32_WCE
-		TextOut(di.hdcDraw,
-			(rc.left + rc.right) / 2,
-			(rc.top + rc.bottom) / 2,
-			pszText,
-			lstrlen(pszText));
-#else
-		ExtTextOut(di.hdcDraw,
-			(rc.left + rc.right) / 2,
-			(rc.top + rc.bottom) / 2,
-			ETO_OPAQUE,
-			NULL,
-			pszText,
-			ATL::lstrlen(pszText),
-			NULL);
-#endif
-
-		if (bSelectOldRgn)
-			SelectClipRgn(di.hdcDraw, hRgnOld);
-
-		DeleteObject(hRgnNew);
-
-		return S_OK;
-	}
-
+	//固有属性
 	OLE_COLOR m_clrBackColor;
-	void OnBackColorChanged()
-	{
-		ATLTRACE(_T("OnBackColorChanged\n"));
-	}
+	void OnBackColorChanged();
 	LONG m_nBackStyle;
-	void OnBackStyleChanged()
-	{
-		ATLTRACE(_T("OnBackStyleChanged\n"));
-	}
+	void OnBackStyleChanged();
 	BOOL m_bEnabled;
-	void OnEnabledChanged()
-	{
-		ATLTRACE(_T("OnEnabledChanged\n"));
-	}
+	void OnEnabledChanged();
 	OLE_COLOR m_clrForeColor;
-	void OnForeColorChanged()
-	{
-		ATLTRACE(_T("OnForeColorChanged\n"));
-	}
+	void OnForeColorChanged();
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
+	HRESULT FinalConstruct() { return S_OK; }
 
-	void FinalRelease()
-	{
-	}
+	void FinalRelease() {}
+	//固有方法
 	STDMETHOD(AboutBox)();
 	STDMETHOD(DoClick)();
 	STDMETHOD(Refresh)();
 
+	//自定义属性
 	IDispatch* m_pDispApp = 0;
 	STDMETHOD(get_Application)(IDispatch** pVal);
 	STDMETHOD(put_Application)(IDispatch* newVal);
@@ -225,7 +170,6 @@ public:
 	//STDMETHOD(get_CenterColor)(OLE_COLOR* pVal);
 	//STDMETHOD(put_CenterColor)(OLE_COLOR newVal);
 	IMPLEMENT_STOCKPROP(OLE_COLOR, CenterColor, clrCenterColor, DISPID_CenterColor)
-
 	IDispatch* m_pDispParent = 0;
 	STDMETHOD(get_Parent)(IDispatch** pVal);
 	STDMETHOD(put_Parent)(IDispatch* newVal);
@@ -235,6 +179,10 @@ public:
 	LONG m_nRingValue = 0;
 	STDMETHOD(get_RingValue)(LONG* pVal);
 	STDMETHOD(put_RingValue)(LONG newVal);
+
+private:
+	HBRUSH m_centerBrush;
+	HPEN m_borderPen;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(BullsEye), CBullsEye)
