@@ -1,0 +1,34 @@
+HKCR
+{
+	BullsEyeControl.BullsEye.1 = s 'BullsEye Class'
+	{
+		CLSID = s '{1328C519-C623-443D-9C45-A78EEAC9ECF1}'
+		Insertable
+	}
+	BullsEyeControl.BullsEye = s 'BullsEye Class'
+	{		
+		CurVer = s 'BullsEyeControl.BullsEye.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {1328C519-C623-443D-9C45-A78EEAC9ECF1} = s 'BullsEye Class'
+		{
+			ProgID = s 'BullsEyeControl.BullsEye.1'
+			VersionIndependentProgID = s 'BullsEyeControl.BullsEye'
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			ForceRemove Control
+			ForceRemove Insertable
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 106'
+			MiscStatus = s '0'
+			{
+			    '1' = s '%OLEMISC%'
+			}
+			TypeLib = s '{257D8207-06D9-4C90-BB2F-8413FEA8139F}'
+			Version = s '1.0'
+		}
+	}
+}

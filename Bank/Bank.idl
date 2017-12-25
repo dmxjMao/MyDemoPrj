@@ -1,0 +1,37 @@
+// Bank.idl : Bank的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(Bank.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(6E42CC7E-C9DC-42D6-9236-92830A57FBF0),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IAccountATL : IDispatch{
+	[id(1)] HRESULT Post([in] LONG lAccount, [out, retval] BSTR* pbstrResult);
+	[propget, id(2), helpstring("交替环（偶数）的颜色"), bindable, requestedit] HRESULT AlternateColor([out, retval] OLE_COLOR* pVal);
+	[propput, id(2), helpstring("交替环（偶数）的颜色"), bindable, requestedit] HRESULT AlternateColor([in] OLE_COLOR newVal);
+};
+[
+	uuid(F8F6C633-65EF-44FF-8D5C-CBBA7FAE2D2A),
+	version(1.0),
+]
+library BankLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(B4E5A577-0825-42CF-9315-93F8FC81E4F6)		
+	]
+	coclass AccountATL
+	{
+		[default] interface IAccountATL;
+	};
+};
+

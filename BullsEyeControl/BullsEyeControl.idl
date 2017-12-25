@@ -1,0 +1,92 @@
+// BullsEyeControl.idl : BullsEyeControl的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(BullsEyeControl.tlb)和封送处理代码。
+
+#include "olectl.h"
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(39CC29F7-8DFA-4CC2-974C-8EA38D863D62),
+	dual,
+	nonextensible,//运行时不可添加IDispatch成员
+	pointer_default(unique)//参数列表的指针如何处理
+]
+interface IBullsEye : IDispatch{
+	//bindable属性支持数据绑定；requestedit属性支持OnRequestEdit通知；
+	[propput, bindable, requestedit, id(DISPID_BACKCOLOR)]
+	HRESULT BackColor([in]OLE_COLOR clr);
+	[propget, bindable, requestedit, id(DISPID_BACKCOLOR)]
+	HRESULT BackColor([out,retval]OLE_COLOR* pclr);
+	[propput, bindable, requestedit, id(DISPID_BACKSTYLE)]
+	HRESULT BackStyle([in]long style);
+	[propget, bindable, requestedit, id(DISPID_BACKSTYLE)]
+	HRESULT BackStyle([out,retval]long* pstyle);
+	[propput, bindable, requestedit, id(DISPID_FORECOLOR)]
+	HRESULT ForeColor([in]OLE_COLOR clr);
+	[propget, bindable, requestedit, id(DISPID_FORECOLOR)]
+	HRESULT ForeColor([out,retval]OLE_COLOR* pclr);
+	[propput, bindable, requestedit, id(DISPID_ENABLED)]
+	HRESULT Enabled([in]VARIANT_BOOL vbool);
+	[propget, bindable, requestedit, id(DISPID_ENABLED)]
+	HRESULT Enabled([out,retval]VARIANT_BOOL* pbool);
+
+
+	[id(DISPID_ABOUTBOX), helpstring("显示关于对话框")] HRESULT AboutBox();
+	[id(DISPID_DOCLICK), helpstring("鼠标点击")] HRESULT DoClick();
+	[id(DISPID_REFRESH), helpstring("重绘")] HRESULT Refresh();
+	enum {
+		DISPID_Application = 1,
+		DISPID_AlternateColor,
+		DISPID_Beep,
+		DISPID_CenterColor,
+		DISPID_PARENT, //DISPID_Parent和系统冲突了
+		DISPID_RingCount,
+		DISPID_RingValue = 7
+	};
+	[propget, id(DISPID_Application), helpstring("返回寄主应用程序IDispatch*"), bindable, requestedit] HRESULT Application([out, retval] IDispatch** pVal);
+	[propput, id(DISPID_Application), helpstring("返回寄主应用程序IDispatch*"), bindable, requestedit] HRESULT Application([in] IDispatch* newVal);
+	[propget, id(DISPID_AlternateColor), helpstring("交替环（偶数）的颜色"), bindable, requestedit] HRESULT AlternateColor([out, retval] OLE_COLOR* pVal);
+	[propput, id(DISPID_AlternateColor), helpstring("交替环（偶数）的颜色"), bindable, requestedit] HRESULT AlternateColor([in] OLE_COLOR newVal);
+	[propget, id(DISPID_Beep), helpstring("使用/禁止声音"), bindable, requestedit] HRESULT Beep([out, retval] VARIANT_BOOL* pVal);
+	[propput, id(DISPID_Beep), helpstring("使用/禁止声音"), bindable, requestedit] HRESULT Beep([in] VARIANT_BOOL newVal);
+	[propget, id(DISPID_CenterColor), helpstring("中心环（奇数）的颜色"), bindable, requestedit] HRESULT CenterColor([out, retval] OLE_COLOR* pVal);
+	[propput, id(DISPID_CenterColor), helpstring("中心环（奇数）的颜色"), bindable, requestedit] HRESULT CenterColor([in] OLE_COLOR newVal);
+	[propget, id(DISPID_PARENT), helpstring("控件父窗口"), bindable, requestedit] HRESULT Parent([out, retval] IDispatch** pVal);
+	[propput, id(DISPID_PARENT), helpstring("控件父窗口"), bindable, requestedit] HRESULT Parent([in] IDispatch* newVal);
+	[propget, id(DISPID_RingCount), helpstring("环数"), bindable, requestedit] HRESULT RingCount([out, retval] SHORT* pVal);
+	[propput, id(DISPID_RingCount), helpstring("环数"), bindable, requestedit] HRESULT RingCount([in] SHORT newVal);
+	[propget, id(DISPID_RingValue), helpstring("每环的值"), bindable, requestedit] HRESULT RingValue([out, retval] LONG* pVal);
+	[propput, id(DISPID_RingValue), helpstring("每环的值"), bindable, requestedit] HRESULT RingValue([in] LONG newVal);
+};
+
+[
+	uuid(257D8207-06D9-4C90-BB2F-8413FEA8139F),
+	version(1.0),
+]
+library BullsEyeControlLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(4840A046-50D5-49B7-80F8-D5B2E6CFF270)		
+	]
+	dispinterface _IBullsEyeEvents
+	{
+		properties:
+		methods:
+	};
+	[
+		uuid(1328C519-C623-443D-9C45-A78EEAC9ECF1),		
+		control
+	]
+	coclass BullsEye
+	{
+		[default] interface IBullsEye;
+		//default属性默认接口；source属性事件的源接口；
+		[default, source] dispinterface _IBullsEyeEvents;
+	};
+};
+
